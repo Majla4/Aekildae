@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encyklopedie Aekildae</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+/* ══════════════════════════════════════════════════════════
+   DESIGN SYSTEM — převzato 1:1 z Deníku DnD (shared.css)
+   ══════════════════════════════════════════════════════════ */
+:root {
+  --bg: #12141c;
+  --bg-panel: #1b1e29;
+  --bg-panel-2: #232735;
+  --bg-panel-3: #2b3040;
+  --border: #333849;
+  --border-soft: #2a2e3d;
+  --text: #e8e3d8;
+  --text-dim: #9a95a8;
+  --text-faint: #666b7d;
+  --accent-brass: #c99a44;
+  --accent-brass-dim: #8a6a30;
+  --accent-blood: #c15a52;
+  --accent-blood-dim: #7a3530;
+  --accent-verdigris: #5aab97;
+  --accent-verdigris-dim: #35695c;
+  --accent-violet: #9285c4;
+  --accent-violet-dim: #5c5280;
+  --radius: 6px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(201,154,68,0.05), transparent 40%),
+    radial-gradient(circle at 85% 100%, rgba(90,171,151,0.04), transparent 40%);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+a { color: var(--accent-brass); text-decoration: none; transition: color 0.15s; }
+a:hover { color: #e0b85c; text-decoration: underline; }
+
+.eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+button {
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-panel-2);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+button:hover {
+  background: var(--bg-panel-3);
+  border-color: var(--accent-brass-dim);
+  box-shadow: 0 0 0 1px var(--accent-brass-dim), 0 2px 10px rgba(201,154,68,0.25);
+  transform: translateY(-1px);
+}
+button:active { transform: translateY(0); box-shadow: none; }
+button.primary { background: var(--accent-brass-dim); border-color: var(--accent-brass); color: #fff8ea; }
+button.primary:hover { background: var(--accent-brass); }
+
+input[type="text"], input[type="search"] {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 13px;
+  width: 100%;
+}
+input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; border-color: var(--accent-brass); }
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.tag-brass { border-color: var(--accent-brass-dim); color: var(--accent-brass); }
+.tag-blood { border-color: var(--accent-blood-dim); color: var(--accent-blood); }
+.tag-verdigris { border-color: var(--accent-verdigris-dim); color: var(--accent-verdigris); }
+.tag-violet { border-color: var(--accent-violet-dim); color: var(--accent-violet); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg-panel-3); border-radius: 5px; }
+
+/* ══════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════ */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
+}
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-brand h1 { font-size: 20px; color: var(--accent-brass); white-space: nowrap; }
+.topbar-brand .eyebrow { margin-top: 2px; }
+.topbar-search { flex: 0 1 400px; position: relative; }
+.topbar-search input { padding-left: 34px; }
+.topbar-search .search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--text-faint); font-size: 14px; pointer-events: none;
+}
+.topbar-nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.topbar-link {
+  font-size: 12px; padding: 5px 10px; border-radius: var(--radius);
+  color: var(--text-dim); border: 1px solid transparent; cursor: pointer;
+  transition: all 0.12s;
+  font-family: 'Inter', sans-serif; font-weight: 500; background: none;
+}
+.topbar-link:hover { color: var(--text); border-color: var(--border); background: var(--bg-panel-2); transform: none; box-shadow: none; }
+.topbar-link.active { color: var(--accent-brass); border-color: var(--accent-brass-dim); background: var(--accent-brass-dim); }
+.topbar-back {
+  font-size: 12px; padding: 5px 10px; border-radius: var(--radius);
+  color: var(--text-dim); background: var(--bg-panel-2); border: 1px solid var(--border);
+  cursor: pointer; display: none; align-items: center; gap: 4px;
+  font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.12s;
+}
+.topbar-back:hover { color: var(--accent-brass); border-color: var(--accent-brass-dim); transform: none; box-shadow: none; }
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE MENU
+   ══════════════════════════════════════════════════════════ */
+.mobile-toggle {
+  display: none; background: none; border: none; color: var(--text-dim);
+  font-size: 22px; padding: 4px; cursor: pointer;
+}
+.mobile-toggle:hover { color: var(--accent-brass); transform: none; box-shadow: none; }
+
+/* ══════════════════════════════════════════════════════════
+   SEARCH RESULTS DROPDOWN
+   ══════════════════════════════════════════════════════════ */
+.search-dropdown {
+  position: absolute; top: 100%; left: 0; right: 0; margin-top: 4px;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  max-height: 360px; overflow-y: auto; display: none; z-index: 200;
+}
+.search-dropdown.visible { display: block; }
+.search-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  cursor: pointer; transition: background 0.1s; border-bottom: 1px solid var(--border-soft);
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover { background: var(--bg-panel-2); }
+.search-item-icon { font-size: 18px; flex-shrink: 0; width: 28px; text-align: center; }
+.search-item-text { flex: 1; min-width: 0; }
+.search-item-name { font-weight: 600; font-size: 13px; }
+.search-item-cat { font-size: 11px; color: var(--text-faint); }
+.search-empty { padding: 16px; text-align: center; color: var(--text-faint); font-size: 13px; }
+
+/* ══════════════════════════════════════════════════════════
+   LAYOUT
+   ══════════════════════════════════════════════════════════ */
+.main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+/* ══════════════════════════════════════════════════════════
+   HERO (úvodní stránka)
+   ══════════════════════════════════════════════════════════ */
+.hero {
+  text-align: center; padding: 60px 20px 40px; position: relative;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 30%, var(--accent-brass), transparent 70%);
+}
+.hero h1 {
+  font-size: clamp(32px, 5vw, 52px); color: var(--accent-brass);
+  text-shadow: 0 2px 20px rgba(201,154,68,0.25); margin-bottom: 8px;
+}
+.hero .subtitle {
+  font-family: 'Cinzel', serif; font-size: clamp(14px, 2vw, 18px);
+  color: var(--text-dim); font-weight: 500; letter-spacing: 0.05em;
+}
+.hero .divider {
+  width: 120px; height: 2px; margin: 24px auto;
+  background: linear-gradient(90deg, transparent, var(--accent-brass), transparent);
+}
+.hero .intro {
+  max-width: 700px; margin: 0 auto; font-size: 15px; color: var(--text-dim); line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CATEGORY GRID (hlavní navigace)
+   ══════════════════════════════════════════════════════════ */
+.cat-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px; margin-top: 36px;
+}
+.cat-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 18px; cursor: pointer;
+  transition: all 0.15s ease; position: relative; overflow: hidden;
+}
+.cat-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--cat-accent, var(--accent-brass));
+  opacity: 0; transition: opacity 0.15s;
+}
+.cat-card:hover {
+  border-color: var(--accent-brass-dim);
+  box-shadow: 0 0 0 1px var(--accent-brass-dim), 0 4px 16px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+.cat-card:hover::before { opacity: 1; }
+.cat-icon { font-size: 28px; margin-bottom: 10px; }
+.cat-name { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.cat-desc { font-size: 12px; color: var(--text-faint); line-height: 1.5; }
+.cat-count { font-size: 11px; color: var(--text-faint); margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+
+/* ══════════════════════════════════════════════════════════
+   SECTION PAGE (výpis položek kategorie)
+   ══════════════════════════════════════════════════════════ */
+.section-page { display: none; }
+.section-page.active { display: block; }
+
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; gap: 16px; flex-wrap: wrap;
+}
+.section-header h2 { font-size: 26px; color: var(--accent-brass); }
+
+.filter-bar {
+  display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; align-items: center;
+}
+.filter-bar input { flex: 1; min-width: 200px; }
+.filter-tag {
+  font-size: 11px; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-dim);
+  cursor: pointer; background: none; transition: all 0.12s;
+  font-family: 'Inter', sans-serif;
+}
+.filter-tag:hover { border-color: var(--accent-brass-dim); color: var(--text); transform: none; box-shadow: none; }
+.filter-tag.active { border-color: var(--accent-brass); color: var(--accent-brass); background: rgba(201,154,68,0.1); }
+
+/* ══════════════════════════════════════════════════════════
+   ENTRY CARDS (karty položek)
+   ══════════════════════════════════════════════════════════ */
+.entry-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.entry-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; cursor: pointer;
+  transition: all 0.15s ease;
+}
+.entry-card:hover {
+  border-color: var(--accent-brass-dim);
+  box-shadow: 0 0 0 1px var(--accent-brass-dim);
+  transform: translateY(-1px);
+}
+.entry-thumb {
+  width: 100%; aspect-ratio: 16 / 9; background: var(--bg-panel-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; border-bottom: 1px solid var(--border-soft);
+  overflow: hidden; position: relative;
+}
+.entry-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.entry-thumb .placeholder-icon { color: var(--text-faint); opacity: 0.4; }
+.entry-body { padding: 14px 16px; }
+.entry-name { font-family: 'Cinzel', serif; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.entry-excerpt { font-size: 12px; color: var(--text-dim); line-height: 1.5; margin-bottom: 8px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.entry-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* ══════════════════════════════════════════════════════════
+   DETAIL PAGE (detail položky)
+   ══════════════════════════════════════════════════════════ */
+.detail-page { display: none; }
+.detail-page.active { display: block; }
+
+.detail-hero {
+  position: relative; margin: -28px -24px 28px; padding: 60px 40px 40px;
+  background: var(--bg-panel); border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.detail-hero::before {
+  content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 50%, var(--accent-brass), transparent 60%);
+}
+.detail-hero .eyebrow { margin-bottom: 8px; }
+.detail-hero h1 {
+  font-size: clamp(26px, 4vw, 38px); color: var(--accent-brass); margin-bottom: 10px;
+}
+.detail-hero .detail-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.detail-layout {
+  display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start;
+}
+
+.detail-content { line-height: 1.8; }
+.detail-content h3 {
+  font-size: 18px; color: var(--accent-brass); margin: 28px 0 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border-soft);
+}
+.detail-content h3:first-child { margin-top: 0; }
+.detail-content p { margin-bottom: 14px; color: var(--text); }
+.detail-content ul { margin: 0 0 14px 20px; }
+.detail-content li { margin-bottom: 4px; }
+.detail-content .wiki-link { color: var(--accent-brass); cursor: pointer; border-bottom: 1px dotted var(--accent-brass-dim); }
+.detail-content .wiki-link:hover { color: #e0b85c; }
+
+.detail-sidebar { display: flex; flex-direction: column; gap: 14px; }
+.info-box {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.info-box-header {
+  padding: 10px 14px; background: var(--bg-panel-2);
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  border-bottom: 1px solid var(--border-soft); color: var(--accent-brass);
+}
+.info-box-body { padding: 12px 14px; }
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 0; border-bottom: 1px solid var(--border-soft);
+  font-size: 13px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--text-faint); font-weight: 500; }
+.info-value { color: var(--text); text-align: right; }
+
+.related-box { margin-top: 0; }
+.related-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  cursor: pointer; border-bottom: 1px solid var(--border-soft);
+  transition: background 0.1s; font-size: 13px;
+}
+.related-item:last-child { border-bottom: none; }
+.related-item:hover { background: var(--bg-panel-2); }
+.related-icon { font-size: 16px; flex-shrink: 0; }
+.related-name { font-weight: 500; }
+
+/* ══════════════════════════════════════════════════════════
+   TIMELINE (Časová osa)
+   ══════════════════════════════════════════════════════════ */
+.timeline { position: relative; padding-left: 28px; }
+.timeline::before {
+  content: ""; position: absolute; left: 8px; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(180deg, var(--accent-brass), var(--accent-brass-dim), var(--border));
+}
+.timeline-item { position: relative; margin-bottom: 24px; }
+.timeline-dot {
+  position: absolute; left: -24px; top: 4px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--accent-brass); border: 2px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--accent-brass-dim);
+}
+.timeline-era {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  color: var(--accent-brass); margin-bottom: 2px;
+}
+.timeline-title { font-family: 'Cinzel', serif; font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.timeline-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+/* ══════════════════════════════════════════════════════════
+   EMPTY STATE
+   ══════════════════════════════════════════════════════════ */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  font-family: 'Cinzel', serif; font-size: 18px; color: var(--text-faint);
+}
+.empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+
+/* ══════════════════════════════════════════════════════════
+   RARITY COLORS (vzácnost předmětů)
+   ══════════════════════════════════════════════════════════ */
+.rarity-common { color: var(--text-dim); }
+.rarity-uncommon { color: var(--accent-verdigris); }
+.rarity-rare { color: #5b8dd9; }
+.rarity-very-rare { color: var(--accent-violet); }
+.rarity-legendary { color: var(--accent-brass); }
+.rarity-artifact { color: var(--accent-blood); }
+
+/* ══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════════════ */
+.fade-in { animation: fadeIn 0.35s ease-out; }
+@keyframes fadeIn {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .detail-layout { grid-template-columns: 1fr; }
+  .detail-sidebar { order: -1; }
+}
+@media (max-width: 700px) {
+  .topbar { flex-wrap: wrap; padding: 10px 16px; }
+  .topbar-search { flex: 1 1 100%; order: 3; }
+  .topbar-nav { display: none; flex-direction: column; gap: 2px; width: 100%; order: 4; }
+  .topbar-nav.open { display: flex; }
+  .mobile-toggle { display: block; }
+  .main { padding: 20px 16px 40px; }
+  .hero { padding: 36px 10px 24px; }
+  .cat-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .entry-grid { grid-template-columns: 1fr; }
+  .detail-hero { padding: 36px 20px 24px; margin: -20px -16px 20px; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════ TOPBAR ════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <h1>📜 Aekildae</h1>
+  </div>
+
+  <div class="topbar-search">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="globalSearch" placeholder="Hledat ve světě Aekildae…" autocomplete="off">
+    <div class="search-dropdown" id="searchDropdown"></div>
+  </div>
+
+  <button class="mobile-toggle" id="mobileToggle">☰</button>
+
+  <nav class="topbar-nav" id="topNav">
+    <button class="topbar-link active" data-page="home">Domů</button>
+    <button class="topbar-link" data-page="svet">Svět</button>
+    <button class="topbar-link" data-page="bestiar">Bestiář</button>
+    <button class="topbar-link" data-page="postavy">Postavy</button>
+    <button class="topbar-link" data-page="hraci">Hráči</button>
+    <button class="topbar-link" data-page="predmety">Předměty</button>
+    <button class="topbar-link" data-page="lokace">Lokace</button>
+    <button class="topbar-link" data-page="frakce">Frakce</button>
+    <button class="topbar-link" data-page="casova-osa">Časová osa</button>
+  </nav>
+  <button class="topbar-back" id="backBtn" onclick="goBack()">← Zpět</button>
+</header>
+
+<!-- ════════════════════════ MAIN CONTENT ════════════════════════ -->
+<main class="main" id="app">
+
+  <!-- ──────── HOME ──────── -->
+  <div class="section-page active" id="page-home">
+    <div class="hero fade-in">
+      <h1>Svět Aekildae</h1>
+      <div class="subtitle">Encyklopedie živého světa</div>
+      <div class="divider"></div>
+      <p class="intro">
+        Vítej v encyklopedii světa Aekildae — průvodci krajinami, stvořeními,
+        frakcemi a příběhy, které formují tento svět. Prozkoumej bestiář plný
+        nebezpečných tvorů, odhal tajemství zapomenutých lokací, nebo se sezn
+        s postavami, které tu zanechaly svůj otisk.
+      </p>
+    </div>
+
+    <div class="cat-grid fade-in">
+      <div class="cat-card" style="--cat-accent: var(--accent-brass)" onclick="showPage('svet')">
+        <div class="cat-icon">🌍</div>
+        <div class="cat-name">Svět</div>
+        <div class="cat-desc">Příběh světa, jeho historie, kosmologie a zákony</div>
+        <div class="cat-count" id="count-svet"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-blood)" onclick="showPage('bestiar')">
+        <div class="cat-icon">🐉</div>
+        <div class="cat-name">Bestiář</div>
+        <div class="cat-desc">Monstra, tvorové a nebezpečné bytosti světa</div>
+        <div class="cat-count" id="count-bestiar"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-verdigris)" onclick="showPage('postavy')">
+        <div class="cat-icon">👤</div>
+        <div class="cat-name">Postavy</div>
+        <div class="cat-desc">Důležité nehráčské postavy a osobnosti</div>
+        <div class="cat-count" id="count-postavy"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: #5b8dd9" onclick="showPage('hraci')">
+        <div class="cat-icon">⚔️</div>
+        <div class="cat-name">Hráčské postavy</div>
+        <div class="cat-desc">Profily a příběhy hrdinů kampaně</div>
+        <div class="cat-count" id="count-hraci"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-violet)" onclick="showPage('predmety')">
+        <div class="cat-icon">🗡️</div>
+        <div class="cat-name">Předměty</div>
+        <div class="cat-desc">Zbraně, zbroje, lektvary a magické artefakty</div>
+        <div class="cat-count" id="count-predmety"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-brass)" onclick="showPage('lokace')">
+        <div class="cat-icon">🏰</div>
+        <div class="cat-name">Lokace</div>
+        <div class="cat-desc">Města, dungeony, regiony a zajímavá místa</div>
+        <div class="cat-count" id="count-lokace"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-verdigris)" onclick="showPage('frakce')">
+        <div class="cat-icon">🏛️</div>
+        <div class="cat-name">Frakce a organizace</div>
+        <div class="cat-desc">Gildy, řády, kmeny a politické skupiny</div>
+        <div class="cat-count" id="count-frakce"></div>
+      </div>
+      <div class="cat-card" style="--cat-accent: var(--accent-blood)" onclick="showPage('casova-osa')">
+        <div class="cat-icon">⏳</div>
+        <div class="cat-name">Časová osa</div>
+        <div class="cat-desc">Chronologie událostí světa a kampaně</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────── LISTING PAGES (dynamicky generované) ──────── -->
+  <div class="section-page" id="page-listing">
+    <div class="section-header">
+      <h2 id="listingTitle"></h2>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="listingSearch" placeholder="Filtrovat…">
+      <div id="listingTags"></div>
+    </div>
+    <div class="entry-grid" id="listingGrid"></div>
+    <div class="empty-state" id="listingEmpty" style="display:none">
+      <div class="empty-icon">🔍</div>
+      Žádné výsledky
+    </div>
+  </div>
+
+  <!-- ──────── TIMELINE PAGE ──────── -->
+  <div class="section-page" id="page-timeline">
+    <div class="section-header">
+      <h2>⏳ Časová osa Aekildae</h2>
+    </div>
+    <div class="timeline" id="timelineContent"></div>
+  </div>
+
+  <!-- ──────── DETAIL PAGE ──────── -->
+  <div class="detail-page" id="page-detail">
+    <div class="detail-hero" id="detailHero"></div>
+    <div class="detail-layout">
+      <div class="detail-content" id="detailContent"></div>
+      <aside class="detail-sidebar" id="detailSidebar"></aside>
+    </div>
+  </div>
+
+</main>
+
+<!-- ════════════════════════ FOOTER ════════════════════════ -->
+<footer style="text-align:center; padding:20px; border-top:1px solid var(--border); color:var(--text-faint); font-size:12px;">
+  Encyklopedie Aekildae · Součást projektu
+  <a href="https://majla.pythonanywhere.com/" target="_blank" rel="noopener">Vypravěčský deník</a>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   DATA — ukázkový obsah pro demonstraci
+   ══════════════════════════════════════════════════════════════════
+   Každá položka má:  id, name, category, icon, tags[], excerpt, detail {}
+   detail obsahuje:   sections[], infoBox{}, related[]
+   ══════════════════════════════════════════════════════════════════ */
+
+const DATA = [
+  // ── BESTIÁŘ ──
+  {
+    id: "stinovy-vlk", name: "Stínový vlk", category: "bestiar",
+    icon: "🐺", tags: ["nemrtvý", "nebezpečný"],
+    excerpt: "Přízračný predátor, který loví v mlžných nížinách. Jeho srst pohlcuje světlo.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Stínový vlk je přízračný tvor obývající mlžné nížiny a temné hvozdy Aekildae. Jeho srst je černější než noc — doslova pohlcuje okolní světlo, čímž kolem sebe vytváří auru temnoty. Oči mu žhnou mdlým fialovým svitem, který je jediným varováním před útokem." },
+        { title: "Chování", text: "Loví výhradně v noci a ve smečkách po 4–8 jedincích. Komunikují ultrazvukem, který lidské ucho nezachytí, ale způsobuje nevolnost a dezorientaci. Jsou překvapivě inteligentní — dokáží koordinovat přepady a obkličovací manévry." },
+        { title: "Slabiny", text: "Silné světelné zdroje je dokáží zahnat. Stříbrné zbraně jim způsobují dvojnásobné zranění. Požehnaný oheň je pro ně smrtelný." }
+      ],
+      infoBox: {
+        title: "Vlastnosti",
+        rows: [
+          ["Typ", "Nemrtvý / přízrak"],
+          ["Nebezpečnost", "CR 4"],
+          ["Životy", "45"],
+          ["Výskyt", "Mlžné nížiny, temné hvozdy"],
+          ["Smečka", "4–8 jedinců"],
+          ["Odolnost", "Nekrotická, psychická"]
+        ]
+      },
+      related: [
+        { id: "mlzne-niziny", name: "Mlžné nížiny", icon: "🏰" },
+        { id: "rada-stribrneho-usvitu", name: "Řád Stříbrného úsvitu", icon: "🏛️" }
+      ]
+    }
+  },
+  {
+    id: "krystalovy-golem", name: "Krystalový golem", category: "bestiar",
+    icon: "💎", tags: ["konstrukt", "elitní"],
+    excerpt: "Prastarý strážce elfských ruin. Jeho tělo z živého krystalu odráží kouzla.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Krystalový golem je konstrukt vytvořený dávnými elfy jako strážce jejich nejposvátnějších míst. Jeho tělo je složeno z živého krystalu, který se neustále přeformovává a pulzuje vnitřní magickou energií. Na přímém světle se jeho povrch třpytí duhovými odlesky." },
+        { title: "Bojové schopnosti", text: "Golemovo tělo odráží většinu magických útoků zpět na útočníka. Fyzické útoky na něj zanechávají praskliny, které se však pomalu zacelují. Jeho údery jsou zničující — dokáže rozdrtit kovovou zbroj jediným úderem." }
+      ],
+      infoBox: {
+        title: "Vlastnosti",
+        rows: [
+          ["Typ", "Konstrukt"],
+          ["Nebezpečnost", "CR 10"],
+          ["Životy", "142"],
+          ["Výskyt", "Elfské ruiny"],
+          ["Odolnost", "Magie (odraz)"],
+          ["Slabina", "Sonická energie"]
+        ]
+      },
+      related: [
+        { id: "eilindor", name: "Eilindor — Elfské ruiny", icon: "🏰" }
+      ]
+    }
+  },
+
+  // ── POSTAVY ──
+  {
+    id: "morath-kramar", name: "Morath Kramář", category: "postavy",
+    icon: "👤", tags: ["obchodník", "spojenec"],
+    excerpt: "Záhadný potulný obchodník, který se vždy objeví přesně ve chvíli, kdy ho někdo potřebuje.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Morath je drobný muž neurčitého věku s prošedivělými vlasy a neustálým úsměvem. Nosí obnošený, ale kvalitní plášť s nespočtem vnitřních kapes. Za sebou táhne malý magický vozík, který je zevnitř nepochopitelně větší než zvenku." },
+        { title: "Osobnost", text: "Vždy přátelský, ale nikdy ne příliš důvěřivý. Má encyklopedické znalosti o předmětech — ví o nich více, než kolik by měl prostý obchodník vědět. Nikdy neodmítne obchod, ale jeho ceny jsou… kreativní." },
+        { title: "Tajemství", text: "Nikdo neví, odkud Morath přichází ani kam odchází. Objevuje se v těch nejodlehlejších lokacích. Někteří tvrdí, že ho viděli na dvou místech současně." }
+      ],
+      infoBox: {
+        title: "Profil",
+        rows: [
+          ["Rasa", "Člověk (?)"],
+          ["Povolání", "Obchodník"],
+          ["Přesvědčení", "Skutečně neutrální"],
+          ["Lokace", "Potulný"],
+          ["Frakce", "Žádná známá"]
+        ]
+      },
+      related: [
+        { id: "plast-stinu", name: "Plášť stínů", icon: "🗡️" }
+      ]
+    }
+  },
+
+  // ── PŘEDMĚTY ──
+  {
+    id: "plast-stinu", name: "Plášť stínů", category: "predmety",
+    icon: "🧥", tags: ["vzácný", "oblečení", "magie"],
+    excerpt: "Plášť utkaný z čistého stínu. Nositel se může na krátkou dobu stát neviditelným.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Plášť stínů je výjimečný magický předmět utkaný z esence čistého stínu. Na dotek působí jako chladný hedváb, ale při pohledu z různých úhlů se zdá, že se jeho povrch neustále pohybuje — jako by byl živý. V přímém světle má tmavě fialový nádech." },
+        { title: "Vlastnosti", text: "Nositel může jednou za dlouhý odpočinek aktivovat plášť a stát se neviditelným na 1 minutu. Během neviditelnosti zanechává jemnou stopu stínové esence, kterou mohou vycvičení stopaři sledovat. Plášť také poskytuje výhodu na záchranné hody proti nekrotickým efektům." },
+        { title: "Materiál a výroba", text: "Plášť je utkaný z vláken stínového hedvábí — materiálu, který lze získat pouze od stínových pavouků v hlubinách Podtemna. Proces tkaní trvá 3 měsíce a vyžaduje naprostou tmu. Každý plášť je unikátní — vzor tkaniny odpovídá konstelacím v okamžiku dokončení." },
+        { title: "Historie", text: "Tento konkrétní plášť údajně patřil legendárnímu zloději Velmirovi Tichému, který s jeho pomocí vykradl Pokladnici tisíce zámků. Po Velmirově záhadném zmizení se plášť objevil v Morathově kolekci." }
+      ],
+      infoBox: {
+        title: "Vlastnosti předmětu",
+        rows: [
+          ["Typ", "Zázračný předmět (oblečení)"],
+          ["Vzácnost", "Vzácný"],
+          ["Vyžaduje sladění", "Ano"],
+          ["Materiál", "Stínové hedvábí"],
+          ["Váha", "0.5 kg"],
+          ["Hodnota", "~4 500 zl"]
+        ]
+      },
+      related: [
+        { id: "morath-kramar", name: "Morath Kramář", icon: "👤" },
+        { id: "stinovy-vlk", name: "Stínový vlk", icon: "🐺" }
+      ]
+    }
+  },
+  {
+    id: "mec-usvitu", name: "Meč úsvitu", category: "predmety",
+    icon: "⚔️", tags: ["legendární", "zbraň", "magie"],
+    excerpt: "Prastarý meč vykovaný z nebeského kovu. Jeho čepel září vlastním světlem.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Meč úsvitu je dvouruční meč vykovaný z nebeského kovu — materiálu, který údajně pochází z fragmentu padlé hvězdy. Čepel vydává stálé teplé světlo v okruhu 10 metrů a jasné světlo v okruhu 20 metrů. Na čepeli jsou vyryty runy v prastarém elfském jazyce." },
+        { title: "Vlastnosti", text: "+3 k zásahu a zranění. Způsobuje dodatečných 2k6 zářivého zranění nemrtvým a démonickým stvořením. Nositel je imunní vůči strachu a má výhodu na záchranné hody proti kouzlům temnoty." },
+        { title: "Materiál a výroba", text: "Čepel je vykovaná z nebeského kovu v peci poháněné dračím ohněm. Rukojeť je obtočena kůží z kimerického draka a hlavice obsahuje malý slzový safír. Výroba trvala údajně celý rok a podílelo se na ní sedm elfských kovářů." }
+      ],
+      infoBox: {
+        title: "Vlastnosti předmětu",
+        rows: [
+          ["Typ", "Zbraň (dvouruční meč)"],
+          ["Vzácnost", "Legendární"],
+          ["Vyžaduje sladění", "Ano (pouze dobré přesvědčení)"],
+          ["Zranění", "2k6 + 3 sečné + 2k6 zářivé"],
+          ["Materiál", "Nebeský kov"],
+          ["Váha", "3 kg"]
+        ]
+      },
+      related: [
+        { id: "rada-stribrneho-usvitu", name: "Řád Stříbrného úsvitu", icon: "🏛️" }
+      ]
+    }
+  },
+
+  // ── LOKACE ──
+  {
+    id: "mlzne-niziny", name: "Mlžné nížiny", category: "lokace",
+    icon: "🌫️", tags: ["divoč", "nebezpečné"],
+    excerpt: "Rozlehlá bažinatá krajina zahalená věčnou mlhou, domov stínových vlků a bludných světel.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Mlžné nížiny jsou rozlehlou oblastí bažin a mokřadů na severu Aekildae. Věčná mlha zde znemožňuje viditelnost na více než 20 metrů. Půda je zrádná — zdánlivě pevný terén se může kdykoli propadnout do bahna. Ve vzduchu visí stálý pach rozkladu a vlhkosti." },
+        { title: "Nebezpečí", text: "Oblast je domovem stínových vlků, bludných světel a dalších tvorů, kteří se přizpůsobili životu v mlze. Cestovatelé hlásí halucinace a ztrátu orientace — někteří tvrdí, že mlha sama je živá a pokouší se je polapit." }
+      ],
+      infoBox: {
+        title: "Informace o lokaci",
+        rows: [
+          ["Region", "Severní Aekildae"],
+          ["Typ", "Bažiny / mokřady"],
+          ["Nebezpečnost", "Vysoká"],
+          ["Viditelnost", "Max 20 m"],
+          ["Osídlení", "Žádné trvalé"]
+        ]
+      },
+      related: [
+        { id: "stinovy-vlk", name: "Stínový vlk", icon: "🐺" }
+      ]
+    }
+  },
+  {
+    id: "eilindor", name: "Eilindor — Elfské ruiny", category: "lokace",
+    icon: "🏚️", tags: ["ruiny", "magické"],
+    excerpt: "Zbytky kdysi slavného elfského města, nyní střežené krystalovými golemy.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Eilindor býval jedním z nejvýznamnějších elfských měst v celém Aekildae. Dnes z něj zbývají jen rozpadající se věže z bílého mramoru, prorostlé vegetací a pokryté luminiscenčním mechem. Uprostřed ruin stojí stále netknutá Katedrála krystalů — hlavní chrám starých elfů." },
+        { title: "Záhady", text: "Ruiny stále pulzují zbytky prastaré magie. V noci se ozývají melodie, které nikdo nehraje. Krystalové golemy stále hlídají — a útočí na každého, kdo se přiblíží ke Katedrále." }
+      ],
+      infoBox: {
+        title: "Informace o lokaci",
+        rows: [
+          ["Region", "Středový hvozd"],
+          ["Typ", "Ruiny / dungeon"],
+          ["Nebezpečnost", "Velmi vysoká"],
+          ["Původní obyvatelé", "Elfové"],
+          ["Strážci", "Krystaolví golemové"]
+        ]
+      },
+      related: [
+        { id: "krystalovy-golem", name: "Krystalový golem", icon: "💎" }
+      ]
+    }
+  },
+
+  // ── FRAKCE ──
+  {
+    id: "rada-stribrneho-usvitu", name: "Řád Stříbrného úsvitu", category: "frakce",
+    icon: "☀️", tags: ["řád", "dobro"],
+    excerpt: "Elitní řád paladinů a kleriků zasvěcených boji proti nemrtvým a temným silám.",
+    detail: {
+      sections: [
+        { title: "Popis", text: "Řád Stříbrného úsvitu je prastarý vojensko-náboženský řád, který existuje déle, než sahá paměť většiny smrtelníků. Jejich posláním je chránit živé před silami nemrtvých, démonů a jiných temných bytostí. Členové nosí charakteristické stříbrné zbroje s motivem vycházejícího slunce." },
+        { title: "Struktura", text: "V čele Řádu stojí Velmistr — současně nejvyšší vojenský velitel i duchovní vůdce. Pod ním slouží Komtuři, kteří vedou jednotlivé komendy (místní pobočky). Řadoví členové se dělí na Bratry meče (bojovníky) a Bratry světla (kleriky a léčitele)." }
+      ],
+      infoBox: {
+        title: "Profil frakce",
+        rows: [
+          ["Typ", "Vojensko-náboženský řád"],
+          ["Přesvědčení", "Zákonné dobro"],
+          ["Sídlo", "Citadela Úsvitu"],
+          ["Velmistr", "Astrid Světlonoška"],
+          ["Členů", "~300"]
+        ]
+      },
+      related: [
+        { id: "mec-usvitu", name: "Meč úsvitu", icon: "⚔️" },
+        { id: "stinovy-vlk", name: "Stínový vlk", icon: "🐺" }
+      ]
+    }
+  },
+
+  // ── SVĚT ──
+  {
+    id: "aekildae-uvod", name: "O světě Aekildae", category: "svet",
+    icon: "🌍", tags: ["lore", "úvod"],
+    excerpt: "Základní přehled o světě Aekildae — jeho geografii, zákonech a historii.",
+    detail: {
+      sections: [
+        { title: "Úvod", text: "Aekildae je svět plný kontrastů — od sluncem zalitých plání po temné hvozdy, kde světlo nepronikne korunami stromů. Je to svět, kde magie je přirozenou součástí reality, ale její používání má vždy svou cenu. Bohové existují a aktivně zasahují do osudů smrtelníků, ačkoli jejich motivace jsou často nepochopitelné." },
+        { title: "Geografie", text: "Kontinent Aekildae se rozprostírá od zmrzlých severních plání přes centrální hvozdy a pahorkatiny až po jižní pouště. Na západě ho ohraničuje Bouřné moře, na východě pak tajemný Mlžný oceán, z něhož se nikdo nevrátil." }
+      ],
+      infoBox: {
+        title: "Svět Aekildae",
+        rows: [
+          ["Typ", "Vysoká fantasy"],
+          ["Magie", "Přítomna, ale riskantní"],
+          ["Bohové", "Aktivní panteón"],
+          ["Éra", "Třetí věk"]
+        ]
+      },
+      related: [
+        { id: "mlzne-niziny", name: "Mlžné nížiny", icon: "🌫️" },
+        { id: "eilindor", name: "Eilindor", icon: "🏚️" },
+        { id: "rada-stribrneho-usvitu", name: "Řád Stříbrného úsvitu", icon: "☀️" }
+      ]
+    }
+  },
+
+  // ── HRÁČSKÉ POSTAVY ──
+  {
+    id: "thorn-ironbark", name: "Thorn Ironbark", category: "hraci",
+    icon: "🛡️", tags: ["paladin", "člověk"],
+    excerpt: "Lidský paladin Řádu Stříbrného úsvitu, hledající vykoupení za hříchy svého otce.",
+    detail: {
+      sections: [
+        { title: "Příběh", text: "Thorn se narodil jako syn nechvalně proslulého žoldnéře, který zradil Řád Stříbrného úsvitu a přešel na stranu temných sil. Thorn se od otcova odkazu distancoval a vstoupil do Řádu s cílem napravit rodinnou hanbu. Složil přísahu pomsty — přísahal, že nalezne svého otce a postaví ho před spravedlnost." },
+        { title: "Osobnost", text: "Thorn je stoický a disciplinovaný, ale pod tvrdým zevnějškem skrývá pochybnosti o tom, zda může uniknout otcovu stínu. Je nesmírně loajální ke svým spojencům a nikdy neopustí člověka v nouzi — i za cenu vlastního ohrožení." }
+      ],
+      infoBox: {
+        title: "Karta postavy",
+        rows: [
+          ["Hráč", "—"],
+          ["Rasa", "Člověk"],
+          ["Povolání", "Paladin (Lv. 5)"],
+          ["Přesvědčení", "Zákonné dobro"],
+          ["Frakce", "Řád Stříbrného úsvitu"],
+          ["HP", "52"]
+        ]
+      },
+      related: [
+        { id: "rada-stribrneho-usvitu", name: "Řád Stříbrného úsvitu", icon: "☀️" },
+        { id: "mec-usvitu", name: "Meč úsvitu", icon: "⚔️" }
+      ]
+    }
+  }
+];
+
+const TIMELINE_DATA = [
+  { era: "První věk", title: "Stvoření Aekildae", desc: "Bohové stvořili svět z prvotního chaosu. Vznikly první rasy — elfové, trpaslíci a draci." },
+  { era: "První věk", title: "Éra draků", desc: "Draci vládli světu jako jeho nejmocnější bytosti. Pod jejich ochranou se rozvíjely první civilizace." },
+  { era: "Druhý věk", title: "Pád draků", desc: "Velká válka bohů vedla ke zničení většiny draků. Elfové a trpaslíci převzali vládu nad kontinentem." },
+  { era: "Druhý věk", title: "Založení Eilindoru", desc: "Elfové vybudovali své největší město — Eilindor, centrum magie a umění." },
+  { era: "Druhý věk", title: "Vznik Řádu Stříbrného úsvitu", desc: "Po první invazi nemrtvých byl založen Řád Stříbrného úsvitu jako obrana proti temným silám." },
+  { era: "Třetí věk", title: "Pád Eilindoru", desc: "Elfské město bylo zničeno neznámou katastrofou. Elfové se stáhli do lesů a ruiny střeží krystaolví golemové." },
+  { era: "Třetí věk", title: "Současnost", desc: "Svět Aekildae vstupuje do nové éry. Staré hrozby se probouzejí a noví hrdinové povstávají." }
+];
+
+const CATEGORY_META = {
+  svet:     { title: "🌍 Svět Aekildae", singular: "záznam" },
+  bestiar:  { title: "🐉 Bestiář", singular: "tvor" },
+  postavy:  { title: "👤 Postavy (NPC)", singular: "postava" },
+  hraci:    { title: "⚔️ Hráčské postavy", singular: "postava" },
+  predmety: { title: "🗡️ Předměty", singular: "předmět" },
+  lokace:   { title: "🏰 Lokace", singular: "lokace" },
+  frakce:   { title: "🏛️ Frakce a organizace", singular: "frakce" }
+};
+
+/* ══════════════════════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════════════════════ */
+let history = [];
+let currentPage = 'home';
+
+function hideAll() {
+  document.querySelectorAll('.section-page, .detail-page').forEach(p => {
+    p.classList.remove('active');
+  });
+}
+
+function setActiveNav(page) {
+  document.querySelectorAll('.topbar-link').forEach(l => l.classList.remove('active'));
+  const btn = document.querySelector(`.topbar-link[data-page="${page}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+function showPage(page) {
+  history.push(currentPage);
+  currentPage = page;
+
+  hideAll();
+  setActiveNav(page);
+
+  const backBtn = document.getElementById('backBtn');
+
+  if (page === 'home') {
+    document.getElementById('page-home').classList.add('active');
+    backBtn.style.display = 'none';
+    history = [];
+  } else if (page === 'casova-osa') {
+    renderTimeline();
+    document.getElementById('page-timeline').classList.add('active');
+    backBtn.style.display = 'flex';
+  } else if (CATEGORY_META[page]) {
+    renderListing(page);
+    document.getElementById('page-listing').classList.add('active');
+    backBtn.style.display = 'flex';
+  }
+
+  window.scrollTo(0, 0);
+  closeSearch();
+}
+
+function showDetail(id) {
+  const item = DATA.find(d => d.id === id);
+  if (!item) return;
+
+  history.push(currentPage);
+  currentPage = 'detail-' + id;
+
+  hideAll();
+  setActiveNav(item.category);
+  renderDetail(item);
+  document.getElementById('page-detail').classList.add('active');
+  document.getElementById('backBtn').style.display = 'flex';
+  window.scrollTo(0, 0);
+  closeSearch();
+}
+
+function goBack() {
+  if (history.length === 0) { showPage('home'); return; }
+  const prev = history.pop();
+  currentPage = '__back__';
+
+  if (prev === 'home') { currentPage = 'home'; showPageDirect('home'); }
+  else if (prev.startsWith('detail-')) {
+    const id = prev.replace('detail-', '');
+    currentPage = prev;
+    const item = DATA.find(d => d.id === id);
+    if (item) {
+      hideAll(); setActiveNav(item.category); renderDetail(item);
+      document.getElementById('page-detail').classList.add('active');
+      document.getElementById('backBtn').style.display = 'flex';
+    }
+  } else {
+    currentPage = prev;
+    showPageDirect(prev);
+  }
+}
+
+function showPageDirect(page) {
+  hideAll(); setActiveNav(page);
+  const backBtn = document.getElementById('backBtn');
+  if (page === 'home') {
+    document.getElementById('page-home').classList.add('active');
+    backBtn.style.display = 'none';
+  } else if (page === 'casova-osa') {
+    renderTimeline();
+    document.getElementById('page-timeline').classList.add('active');
+    backBtn.style.display = 'flex';
+  } else if (CATEGORY_META[page]) {
+    renderListing(page);
+    document.getElementById('page-listing').classList.add('active');
+    backBtn.style.display = 'flex';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDERERS
+   ══════════════════════════════════════════════════════════ */
+function renderListing(category) {
+  const meta = CATEGORY_META[category];
+  const items = DATA.filter(d => d.category === category);
+
+  document.getElementById('listingTitle').textContent = meta.title;
+
+  // Collect all tags
+  const allTags = [...new Set(items.flatMap(i => i.tags))];
+  const tagsHtml = allTags.map(t =>
+    `<button class="filter-tag" data-tag="${t}" onclick="toggleTag(this)">${t}</button>`
+  ).join('');
+  document.getElementById('listingTags').innerHTML = tagsHtml;
+
+  const searchInput = document.getElementById('listingSearch');
+  searchInput.value = '';
+  searchInput.oninput = () => filterListing(category);
+
+  renderListingCards(items);
+}
+
+function renderListingCards(items) {
+  const grid = document.getElementById('listingGrid');
+  const empty = document.getElementById('listingEmpty');
+
+  if (items.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = items.map(item => `
+    <div class="entry-card fade-in" onclick="showDetail('${item.id}')">
+      <div class="entry-thumb">
+        <span class="placeholder-icon">${item.icon}</span>
+      </div>
+      <div class="entry-body">
+        <div class="entry-name">${item.name}</div>
+        <div class="entry-excerpt">${item.excerpt}</div>
+        <div class="entry-tags">
+          ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+let activeTags = new Set();
+
+function toggleTag(btn) {
+  const tag = btn.dataset.tag;
+  if (activeTags.has(tag)) { activeTags.delete(tag); btn.classList.remove('active'); }
+  else { activeTags.add(tag); btn.classList.add('active'); }
+
+  const category = Object.keys(CATEGORY_META).find(k =>
+    document.getElementById('listingTitle').textContent.includes(CATEGORY_META[k].title)
+  ) || currentPage;
+  filterListing(currentPage.startsWith('detail-') ? '' : currentPage);
+}
+
+function filterListing(category) {
+  const search = document.getElementById('listingSearch').value.toLowerCase();
+  let items = DATA.filter(d => d.category === category);
+
+  if (search) items = items.filter(i =>
+    i.name.toLowerCase().includes(search) || i.excerpt.toLowerCase().includes(search)
+  );
+  if (activeTags.size > 0) items = items.filter(i =>
+    [...activeTags].every(t => i.tags.includes(t))
+  );
+
+  renderListingCards(items);
+}
+
+function renderDetail(item) {
+  const d = item.detail;
+
+  // Hero
+  document.getElementById('detailHero').innerHTML = `
+    <p class="eyebrow">${CATEGORY_META[item.category]?.title || ''}</p>
+    <h1>${item.icon} ${item.name}</h1>
+    <div class="detail-tags">
+      ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+  `;
+
+  // Content
+  document.getElementById('detailContent').innerHTML = d.sections.map(s => `
+    <h3>${s.title}</h3>
+    <p>${processWikiLinks(s.text)}</p>
+  `).join('');
+
+  // Sidebar
+  let sidebar = '';
+
+  if (d.infoBox) {
+    sidebar += `
+      <div class="info-box">
+        <div class="info-box-header">${d.infoBox.title}</div>
+        <div class="info-box-body">
+          ${d.infoBox.rows.map(([label, value]) => `
+            <div class="info-row">
+              <span class="info-label">${label}</span>
+              <span class="info-value">${value}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  if (d.related && d.related.length > 0) {
+    sidebar += `
+      <div class="info-box related-box">
+        <div class="info-box-header">Související</div>
+        ${d.related.map(r => `
+          <div class="related-item" onclick="showDetail('${r.id}')">
+            <span class="related-icon">${r.icon}</span>
+            <span class="related-name">${r.name}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  document.getElementById('detailSidebar').innerHTML = sidebar;
+}
+
+function processWikiLinks(text) {
+  DATA.forEach(item => {
+    const regex = new RegExp(`\\b${item.name}\\b`, 'g');
+    text = text.replace(regex,
+      `<span class="wiki-link" onclick="showDetail('${item.id}')">${item.name}</span>`
+    );
+  });
+  return text;
+}
+
+function renderTimeline() {
+  document.getElementById('timelineContent').innerHTML = TIMELINE_DATA.map(t => `
+    <div class="timeline-item fade-in">
+      <div class="timeline-dot"></div>
+      <div class="timeline-era">${t.era}</div>
+      <div class="timeline-title">${t.title}</div>
+      <div class="timeline-desc">${t.desc}</div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   SEARCH
+   ══════════════════════════════════════════════════════════ */
+const searchInput = document.getElementById('globalSearch');
+const searchDropdown = document.getElementById('searchDropdown');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  if (q.length < 2) { closeSearch(); return; }
+
+  const results = DATA.filter(d =>
+    d.name.toLowerCase().includes(q) ||
+    d.excerpt.toLowerCase().includes(q) ||
+    d.tags.some(t => t.toLowerCase().includes(q))
+  ).slice(0, 8);
+
+  if (results.length === 0) {
+    searchDropdown.innerHTML = '<div class="search-empty">Nic nenalezeno</div>';
+  } else {
+    searchDropdown.innerHTML = results.map(r => `
+      <div class="search-item" onclick="showDetail('${r.id}')">
+        <div class="search-item-icon">${r.icon}</div>
+        <div class="search-item-text">
+          <div class="search-item-name">${r.name}</div>
+          <div class="search-item-cat">${CATEGORY_META[r.category]?.title || r.category}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  searchDropdown.classList.add('visible');
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeSearch();
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.topbar-search')) closeSearch();
+});
+
+function closeSearch() {
+  searchDropdown.classList.remove('visible');
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAV CLICK HANDLERS
+   ══════════════════════════════════════════════════════════ */
+document.querySelectorAll('.topbar-link').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeTags.clear();
+    showPage(btn.dataset.page);
+  });
+});
+
+document.getElementById('mobileToggle').addEventListener('click', () => {
+  document.getElementById('topNav').classList.toggle('open');
+});
+
+/* ══════════════════════════════════════════════════════════
+   COUNTS
+   ══════════════════════════════════════════════════════════ */
+Object.keys(CATEGORY_META).forEach(cat => {
+  const count = DATA.filter(d => d.category === cat).length;
+  const el = document.getElementById(`count-${cat}`);
+  if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
+});
+</script>
+</body>
+</html>
