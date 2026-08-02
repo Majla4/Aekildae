@@ -4126,24 +4126,39 @@ function editorSwitchTab(tab) {
   document.getElementById('editorTabItems').style.display = tab === 'items' ? '' : 'none';
   document.getElementById('edTabMain').classList.toggle('active', tab === 'main');
   document.getElementById('edTabItems').classList.toggle('active', tab === 'items');
-  if (tab === 'items') { itemEdInitCatFilter(); itemEdFilter(); }
+  if (tab === 'main') { editorFilter(); }
+  if (tab === 'items') {
+    if (typeof ITEM_CATEGORIES === 'undefined' || typeof ITEMS_DATA === 'undefined') {
+      document.getElementById('itemEdList').innerHTML = '<div style="padding:20px;color:var(--accent-blood)">Chyba: soubor predmety-data.js nebyl načten. Zkontroluj, že je v repozitáři vedle index.html.</div>';
+      return;
+    }
+    itemEdInitCatFilter();
+    document.getElementById('itemEdSearch').value = '';
+    itemEdRenderList(ITEMS_DATA);
+  }
 }
 
 function itemEdInitCatFilter() {
+  if (typeof ITEM_CATEGORIES === 'undefined') return;
   const sel = document.getElementById('itemEdCatFilter');
   sel.innerHTML = '<option value="">Všechny kategorie</option>' +
     Object.keys(ITEM_CATEGORIES).map(c => `<option value="${c}">${c}</option>`).join('');
 }
 
 function itemEdRenderList(items) {
-  if (!items) items = ITEMS_DATA;
-  document.getElementById('itemEdList').innerHTML = items.map(item => {
+  if (!items) items = (typeof ITEMS_DATA !== 'undefined') ? ITEMS_DATA : [];
+  const list = document.getElementById('itemEdList');
+  if (items.length === 0) {
+    list.innerHTML = '<div style="padding:20px;color:var(--text-faint);text-align:center">Žádné předměty k zobrazení</div>';
+    return;
+  }
+  list.innerHTML = items.map(item => {
     const rc = RARITY_CLASS[item.rarity] || '';
     return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="itemEdEdit('${item.id}')">
       <span style="font-size:20px;width:28px;text-align:center">${item.icon||'📦'}</span>
       <div style="flex:1;min-width:0">
         <div style="font-weight:600;font-size:13px">${item.name}</div>
-        <div style="font-size:11px;color:var(--text-faint)">${item.categories.join(', ')} · <span class="${rc}">${item.rarity}</span></div>
+        <div style="font-size:11px;color:var(--text-faint)">${(item.categories||[]).join(', ')} · <span class="${rc}">${item.rarity||''}</span></div>
       </div>
       <span class="tag" style="font-size:10px">${item.id}</span>
     </div>`;
@@ -4151,10 +4166,11 @@ function itemEdRenderList(items) {
 }
 
 function itemEdFilter() {
+  if (typeof ITEMS_DATA === 'undefined') return;
   const q = (document.getElementById('itemEdSearch').value||'').toLowerCase();
   const cat = document.getElementById('itemEdCatFilter').value;
-  let items = ITEMS_DATA;
-  if (cat) items = items.filter(i => i.categories.includes(cat));
+  let items = ITEMS_DATA.slice();
+  if (cat) items = items.filter(i => i.categories && i.categories.includes(cat));
   if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.id.includes(q));
   itemEdRenderList(items);
 }
