@@ -795,7 +795,8 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <div style="margin-bottom:8px"><label class="eyebrow">Výroba</label><textarea id="ie-crafting" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Historie</label><textarea id="ie-history" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Zajímavosti</label><textarea id="ie-trivia" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">URL obrázku</label><input type="text" id="ie-image" placeholder="img/nazev.png"></div><div><label class="eyebrow">URL tech. náčrtku</label><input type="text" id="ie-blueprint"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">URL obrázku</label><input type="text" id="ie-image" placeholder="img/nazev.png"></div><div><label class="eyebrow">Název obrázku</label><input type="text" id="ie-imageLabel" placeholder="Obrázek"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">URL druhého obrázku</label><input type="text" id="ie-blueprint"></div><div><label class="eyebrow">Název druhého obrázku</label><input type="text" id="ie-blueprintLabel" placeholder="Technický plánek"></div></div>
       <div style="margin-bottom:12px"><label class="eyebrow">Související ID (čárkou)</label><input type="text" id="ie-related"></div>
       <div style="margin-top:20px;display:flex;gap:10px"><button class="primary" onclick="itemEdSave()">💾 Uložit</button><button onclick="itemEdCancel()">Zrušit</button><button id="ie-delete-btn" onclick="itemEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button></div>
     </div>
@@ -3597,8 +3598,8 @@ function itemShowDetail(id) {
 
   // Collect images for lightbox
   const images = [];
-  if (item.image) images.push({ src: item.image, label: 'Obrázek' });
-  if (item.blueprint) images.push({ src: item.blueprint, label: 'Technický plánek' });
+  if (item.image) images.push({ src: item.image, label: item.imageLabel || 'Obrázek' });
+  if (item.blueprint) images.push({ src: item.blueprint, label: item.blueprintLabel || 'Technický plánek' });
   window._lightboxImages = images.map(i => i.src);
 
   // Hero
@@ -4125,7 +4126,7 @@ function itemEdNew() {
   itemEdEditingId = null;
   document.getElementById('itemEdFormTitle').textContent = 'Nový předmět';
   document.getElementById('ie-delete-btn').style.display = 'none';
-  ['ie-id','ie-name','ie-icon','ie-subcat','ie-type','ie-damage','ie-ac','ie-cost','ie-weight','ie-material','ie-attunement','ie-excerpt','ie-properties','ie-special','ie-description','ie-crafting','ie-history','ie-trivia','ie-image','ie-blueprint','ie-related'].forEach(id => document.getElementById(id).value = '');
+  ['ie-id','ie-name','ie-icon','ie-subcat','ie-type','ie-damage','ie-ac','ie-cost','ie-weight','ie-material','ie-attunement','ie-excerpt','ie-properties','ie-special','ie-description','ie-crafting','ie-history','ie-trivia','ie-image','ie-imageLabel','ie-blueprint','ie-blueprintLabel','ie-related'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('ie-rarity').value = 'Běžný';
   itemEdBuildCatCheckboxes([]);
   document.getElementById('itemEdForm').style.display = 'block';
@@ -4159,6 +4160,8 @@ function itemEdEdit(id) {
   document.getElementById('ie-trivia').value = item.trivia || '';
   document.getElementById('ie-image').value = item.image || '';
   document.getElementById('ie-blueprint').value = item.blueprint || '';
+  document.getElementById('ie-imageLabel').value = item.imageLabel || '';
+  document.getElementById('ie-blueprintLabel').value = item.blueprintLabel || '';
   document.getElementById('ie-related').value = (item.relatedIds || []).join(', ');
   itemEdBuildCatCheckboxes(item.categories);
   document.getElementById('itemEdForm').style.display = 'block';
@@ -4192,6 +4195,8 @@ function itemEdSave() {
     trivia: document.getElementById('ie-trivia').value.trim(),
     image: document.getElementById('ie-image').value.trim(),
     blueprint: document.getElementById('ie-blueprint').value.trim(),
+    imageLabel: document.getElementById('ie-imageLabel').value.trim(),
+    blueprintLabel: document.getElementById('ie-blueprintLabel').value.trim(),
     attunement: document.getElementById('ie-attunement').value.trim(),
     relatedIds: document.getElementById('ie-related').value.split(',').map(s=>s.trim()).filter(Boolean)
   };

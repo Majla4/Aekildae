@@ -25,7 +25,9 @@ ITEMS_DATA = [
   history: "O původu tohoto konkrétního měšce se vedou spory. Někteří tvrdí, že pochází z dílen elfských řemeslníků z Ergwienynu, jiní ho přisuzují záhadnému řádu alchymistů, kteří kdysi operovali v Pětiměstí. Jisté je, že technické plánky označené jako Mk. II naznačují existenci starší, méně dokonalé verze.",
   trivia: "Název odkazuje na Einstein-Rosenův most — teoretický průchod časoprostorem. Ve světě Aekildae se tomuto jevu říká 'kapsa v éteru'. Zkušení obchodníci varují před vkládáním živých tvorů do měšce — fialová prázdnota uvnitř neposkytuje vzduch k dýchání.",
   image: "img/casoprostorovy_mesec.png",
+  imageLabel: "Měšec",
   blueprint: "img/einstein-rosenuv-mesec-planek.png",
+  blueprintLabel: "Technický plánek Mk. II",
   attunement: "Ne",
   relatedIds: []
 },
@@ -50,7 +52,9 @@ ITEMS_DATA = [
   history: "Plášť patřil kapitánovi Gefrraye Bricotovi z Halle — muži, jehož jméno se v análech vojenské historie objevuje jen v poznámkách pod čarou, což samo o sobě svědčí o účinnosti jeho pláště. Bricot byl údajně průzkumníkem, který operoval hluboko za nepřátelskými liniemi během Pohraničních válek. Jak plášť získal a kdo jej vyrobil, zůstává tajemstvím — Bricot sám tvrdil, že mu jej daroval les.",
   trivia: "Na dotek plášť působí teplý a suchý bez ohledu na počasí. V dešti voda po šupinách stéká, aniž by promočila vnitřní vrstvu. V úplné tmě zelené šupiny jemně fosforeskují — paradoxně tak plášť v naprosté tmě mírně svítí, ačkoli za denního světla činí nositele téměř neviditelným.",
   image: "img/Amgilched.png",
+  imageLabel: "Plášť Amgilched",
   blueprint: "img/Amgilched_planek.png",
+  blueprintLabel: "Detailní pohled",
   attunement: "Ano",
   relatedIds: []
 },
@@ -75,7 +79,9 @@ ITEMS_DATA = [
   history: "Malachitové amulety mají ve světě Aekildae dlouhou tradici. Staří druidové z Angelwoodu věřili, že malachit je zkamenělý dech větru a nese v sobě jeho rychlost. Lovci z movárského pohraničí nosili hrubé malachitové přívěsky jako talismany pro rychlý úhyb před dravci z pohoří Cruinnece. Až elfští řemeslníci z Ergwienynu přišli na způsob, jak z pověry učinit skutečnou magii — a začali malachitové amulety vyrábět systematicky.",
   trivia: "Horníci v movárských dolech věří, že nošení malachitu chrání před pády a zlepšuje rovnováhu na úzkých chodbách. Malachit přitahuje měď — pokud amulet položíte na stůl vedle měděných mincí, mince se k němu pomalu přibližují. Tento jev nemá žádný praktický význam, ale v hospodách slouží jako oblíbený trik k pobavení.",
   image: "img/amulet_pohyblivosti.png",
+  imageLabel: "Amulet",
   blueprint: "img/amulet_pohyblivosti2.png",
+  blueprintLabel: "Surový malachit",
   attunement: "Ano",
   relatedIds: []
 },
@@ -100,7 +106,9 @@ ITEMS_DATA = [
   history: "Podle lidové tradice první Dýmku moudrých rozhodnutí vyřezal bezejmenný pastýř, který se ztratil v horách a tři dny bloudil v mlze. Když z posledních sil zapálil dýmku naplněnou místním plevelným listím, náhle s naprostou jistotou věděl, kudy jít. Sestoupil z hor za dva dny a do konce života si nechal zasílat pytle onoho plevele. Pravda je zřejmě prozaičtější — účinky Hůreckého listí pravděpodobně objevili druidové z Angelwoodu, kteří experimentovali s horskými rostlinami.",
   trivia: "Nemůžeš zvolit správnou cestu? Nevzpomínáš si, kam jsi založil mapu? Nedokážeš se rychle rozhodnout? Zabafej si Hůrecké listí! Pozor však — každé použití trvale odčerpá 1 bod výdrže. Moudrá rozhodnutí mají svou cenu a žádný mudrc jich neučinil nekonečné množství. Zkušení uživatelé doporučují šetřit dýmku na skutečně zásadní momenty — na volbu cesty na křižovatce v temném hvozdu stačí zdravý rozum.",
   image: "img/Dymka.png",
+  imageLabel: "Dýmka",
   blueprint: "img/Dymka_tabak.png",
+  blueprintLabel: "Hůrecké listí",
   attunement: "Ano",
   relatedIds: []
 }
