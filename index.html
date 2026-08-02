@@ -732,151 +732,62 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 
   <!-- ──────── EDITOR PAGE ──────── -->
   <div class="section-page" id="page-editor">
-    <div class="section-header"><h2>✏️ Editor záznamů</h2></div>
-
-    <!-- TAB SWITCHER -->
-    <div style="display:flex;gap:4px;margin-bottom:16px">
-      <button class="topbar-link active" id="edTabMain" onclick="editorSwitchTab('main')" style="padding:8px 16px">📜 Záznamy</button>
-      <button class="topbar-link" id="edTabItems" onclick="editorSwitchTab('items')" style="padding:8px 16px">🗡️ Předměty</button>
-    </div>
-
-    <!-- ═══ MAIN TAB ═══ -->
-    <div id="editorTabMain">
+    <div class="section-header"><h2>✏️ Editor</h2></div>
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
       <button class="primary" onclick="editorNew()">+ Nový záznam</button>
-      <button onclick="editorExport()">⬇ Exportovat DATA (JSON)</button>
-      <button onclick="editorImport()">⬆ Importovat DATA (JSON)</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="editorDoImport(event)">
-    </div>
-
-    <div class="filter-bar">
-      <input type="text" id="editorSearch" placeholder="Hledat záznamy…" oninput="editorFilter()">
-      <select id="editorCatFilter" onchange="editorFilter()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
-        <option value="">Všechny kategorie</option>
-        <option value="svet">Svět</option>
-        <option value="bestiar">Bestiář</option>
-        <option value="postavy">Postavy (NPC)</option>
-        <option value="hraci">Hráčské postavy</option>
-        <option value="predmety">Předměty</option>
-        <option value="lokace">Lokace</option>
-        <option value="frakce">Frakce</option>
-      </select>
-    </div>
-
-    <div id="editorList" style="margin-top:14px"></div>
-
-    <!-- EDIT FORM (hidden by default) -->
-    <div id="editorForm" style="display:none; margin-top:20px; background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius); padding:20px;">
-      <h3 style="color:var(--accent-brass);margin-bottom:14px" id="editorFormTitle">Nový záznam</h3>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div>
-          <label class="eyebrow">ID (unikátní, bez mezer)</label>
-          <input type="text" id="ef-id" placeholder="nazev-zaznamu">
-        </div>
-        <div>
-          <label class="eyebrow">Název</label>
-          <input type="text" id="ef-name" placeholder="Jméno záznamu">
-        </div>
-        <div>
-          <label class="eyebrow">Kategorie</label>
-          <select id="ef-category" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%">
-            <option value="svet">Svět</option>
-            <option value="bestiar">Bestiář</option>
-            <option value="postavy">Postavy (NPC)</option>
-            <option value="hraci">Hráčské postavy</option>
-            <option value="predmety">Předměty</option>
-            <option value="lokace">Lokace</option>
-            <option value="frakce">Frakce</option>
-          </select>
-        </div>
-        <div>
-          <label class="eyebrow">Ikona (emoji)</label>
-          <input type="text" id="ef-icon" placeholder="👤" style="font-size:20px">
-        </div>
-      </div>
-
-      <div style="margin-bottom:12px">
-        <label class="eyebrow">Tagy (oddělené čárkou)</label>
-        <input type="text" id="ef-tags" placeholder="tag1, tag2, tag3">
-      </div>
-      <div style="margin-bottom:12px">
-        <label class="eyebrow">Krátký popis (excerpt)</label>
-        <textarea id="ef-excerpt" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical" placeholder="Krátký popis zobrazený na kartě…"></textarea>
-      </div>
-
-      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Sekce obsahu</h4>
-      <div id="ef-sections"></div>
-      <button onclick="editorAddSection()" style="margin-top:8px;font-size:12px">+ Přidat sekci</button>
-
-      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Info-box (postranní panel)</h4>
-      <div style="margin-bottom:8px">
-        <label class="eyebrow">Nadpis info-boxu</label>
-        <input type="text" id="ef-infobox-title" placeholder="Profil">
-      </div>
-      <div id="ef-infobox-rows"></div>
-      <button onclick="editorAddInfoRow()" style="margin-top:8px;font-size:12px">+ Přidat řádek</button>
-
-      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Související záznamy</h4>
-      <div id="ef-related"></div>
-      <button onclick="editorAddRelated()" style="margin-top:8px;font-size:12px">+ Přidat odkaz</button>
-
-      <div style="margin-top:20px;display:flex;gap:10px">
-        <button class="primary" onclick="editorSave()">💾 Uložit</button>
-        <button onclick="editorCancel()">Zrušit</button>
-        <button id="ef-delete-btn" onclick="editorDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button>
-      </div>
-    </div>
-    </div><!-- /editorTabMain -->
-
-    <!-- ═══ ITEMS TAB ═══ -->
-    <div id="editorTabItems" style="display:none">
-    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
       <button class="primary" onclick="itemEdNew()">+ Nový předmět</button>
-      <button onclick="itemEdExport()">⬇ Exportovat předměty (JSON)</button>
-      <button onclick="itemEdImportJson()">⬆ Importovat předměty (JSON)</button>
+      <button onclick="editorExport()">⬇ Export záznamy</button>
+      <button onclick="itemEdExport()">⬇ Export předměty</button>
+      <button onclick="editorImport()">⬆ Import záznamy</button>
+      <button onclick="itemEdImportJson()">⬆ Import předměty</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="editorDoImport(event)">
       <input type="file" id="itemImportJsonFile" accept=".json" style="display:none" onchange="itemEdDoImportJson(event)">
     </div>
     <div class="filter-bar">
-      <input type="text" id="itemEdSearch" placeholder="Hledat předměty…" oninput="itemEdFilter()">
-      <select id="itemEdCatFilter" onchange="itemEdFilter()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
-        <option value="">Všechny kategorie</option>
+      <input type="text" id="editorSearch" placeholder="Hledat…" oninput="editorFilterAll()">
+      <select id="editorCatFilter" onchange="editorFilterAll()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
+        <option value="">Vše</option>
+        <option value="__items__">🗡️ Předměty</option>
+        <option value="svet">🌍 Svět</option>
+        <option value="bestiar">🐉 Bestiář</option>
+        <option value="postavy">👤 Postavy (NPC)</option>
+        <option value="hraci">⚔️ Hráčské postavy</option>
+        <option value="lokace">🏰 Lokace</option>
+        <option value="frakce">🏛️ Frakce</option>
       </select>
     </div>
-    <div id="itemEdList" style="margin-top:14px"></div>
-
-    <!-- ITEM EDIT FORM -->
+    <div id="editorList" style="margin-top:14px"></div>
+    <div id="editorForm" style="display:none;margin-top:20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+      <h3 style="color:var(--accent-brass);margin-bottom:14px" id="editorFormTitle">Nový záznam</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">ID</label><input type="text" id="ef-id" placeholder="nazev-zaznamu"></div>
+        <div><label class="eyebrow">Název</label><input type="text" id="ef-name" placeholder="Jméno záznamu"></div>
+        <div><label class="eyebrow">Kategorie</label><select id="ef-category" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%"><option value="svet">Svět</option><option value="bestiar">Bestiář</option><option value="postavy">Postavy (NPC)</option><option value="hraci">Hráčské postavy</option><option value="lokace">Lokace</option><option value="frakce">Frakce</option></select></div>
+        <div><label class="eyebrow">Ikona</label><input type="text" id="ef-icon" placeholder="👤" style="font-size:20px"></div>
+      </div>
+      <div style="margin-bottom:12px"><label class="eyebrow">Tagy (čárkou)</label><input type="text" id="ef-tags" placeholder="tag1, tag2"></div>
+      <div style="margin-bottom:12px"><label class="eyebrow">Krátký popis</label><textarea id="ef-excerpt" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Sekce obsahu</h4>
+      <div id="ef-sections"></div><button onclick="editorAddSection()" style="margin-top:8px;font-size:12px">+ Přidat sekci</button>
+      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Info-box</h4>
+      <div style="margin-bottom:8px"><label class="eyebrow">Nadpis</label><input type="text" id="ef-infobox-title" placeholder="Profil"></div>
+      <div id="ef-infobox-rows"></div><button onclick="editorAddInfoRow()" style="margin-top:8px;font-size:12px">+ Přidat řádek</button>
+      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Související</h4>
+      <div id="ef-related"></div><button onclick="editorAddRelated()" style="margin-top:8px;font-size:12px">+ Přidat odkaz</button>
+      <div style="margin-top:20px;display:flex;gap:10px"><button class="primary" onclick="editorSave()">💾 Uložit</button><button onclick="editorCancel()">Zrušit</button><button id="ef-delete-btn" onclick="editorDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button></div>
+    </div>
     <div id="itemEdForm" style="display:none;margin-top:20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
       <h3 style="color:var(--accent-brass);margin-bottom:14px" id="itemEdFormTitle">Nový předmět</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label class="eyebrow">ID (auto z názvu)</label><input type="text" id="ie-id" placeholder="auto"></div>
+        <div><label class="eyebrow">ID (auto)</label><input type="text" id="ie-id" placeholder="auto"></div>
         <div><label class="eyebrow">Název</label><input type="text" id="ie-name" placeholder="Název předmětu"></div>
         <div><label class="eyebrow">Ikona</label><input type="text" id="ie-icon" placeholder="⚔️" style="font-size:20px"></div>
-        <div><label class="eyebrow">Vzácnost</label>
-          <select id="ie-rarity" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%">
-            <option>Běžný</option><option>Neobvyklý</option><option>Vzácný</option><option>Velmi vzácný</option><option>Legendární</option><option>Artefakt</option>
-          </select>
-        </div>
+        <div><label class="eyebrow">Vzácnost</label><select id="ie-rarity" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%"><option>Běžný</option><option>Neobvyklý</option><option>Vzácný</option><option>Velmi vzácný</option><option>Legendární</option><option>Artefakt</option></select></div>
       </div>
-
-      <div style="margin-bottom:12px">
-        <label class="eyebrow">Kategorie (zaškrtni)</label>
-        <div id="ie-cats" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label class="eyebrow">Podkategorie</label><input type="text" id="ie-subcat" placeholder="Meče, Lehké zbroje…"></div>
-        <div><label class="eyebrow">Typ</label><input type="text" id="ie-type" placeholder="Zbraň (jednoruční meč)"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label class="eyebrow">Zranění</label><input type="text" id="ie-damage" placeholder="1k8 sečné"></div>
-        <div><label class="eyebrow">AC</label><input type="text" id="ie-ac" placeholder="16"></div>
-        <div><label class="eyebrow">Cena</label><input type="text" id="ie-cost" placeholder="150 zl"></div>
-        <div><label class="eyebrow">Váha</label><input type="text" id="ie-weight" placeholder="1.5 kg"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label class="eyebrow">Materiál</label><input type="text" id="ie-material"></div>
-        <div><label class="eyebrow">Vyžaduje sladění</label><input type="text" id="ie-attunement" placeholder="Ano / Ne"></div>
-      </div>
+      <div style="margin-bottom:12px"><label class="eyebrow">Kategorie (zaškrtni)</label><div id="ie-cats" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">Podkategorie</label><input type="text" id="ie-subcat"></div><div><label class="eyebrow">Typ</label><input type="text" id="ie-type"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">Zranění</label><input type="text" id="ie-damage"></div><div><label class="eyebrow">AC</label><input type="text" id="ie-ac"></div><div><label class="eyebrow">Cena</label><input type="text" id="ie-cost"></div><div><label class="eyebrow">Váha</label><input type="text" id="ie-weight"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">Materiál</label><input type="text" id="ie-material"></div><div><label class="eyebrow">Sladění</label><input type="text" id="ie-attunement" placeholder="Ano / Ne"></div></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Krátký popis</label><textarea id="ie-excerpt" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Vlastnosti</label><textarea id="ie-properties" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Zvláštní vlastnosti</label><textarea id="ie-special" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
@@ -884,20 +795,10 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <div style="margin-bottom:8px"><label class="eyebrow">Výroba</label><textarea id="ie-crafting" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Historie</label><textarea id="ie-history" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
       <div style="margin-bottom:8px"><label class="eyebrow">Zajímavosti</label><textarea id="ie-trivia" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div><label class="eyebrow">URL obrázku</label><input type="text" id="ie-image" placeholder="img/nazev.png"></div>
-        <div><label class="eyebrow">URL tech. náčrtku</label><input type="text" id="ie-blueprint" placeholder="img/nazev-planek.png"></div>
-      </div>
-      <div style="margin-bottom:12px"><label class="eyebrow">Související ID (čárkou)</label><input type="text" id="ie-related" placeholder="id-zaznamu-1, id-zaznamu-2"></div>
-
-      <div style="margin-top:20px;display:flex;gap:10px">
-        <button class="primary" onclick="itemEdSave()">💾 Uložit</button>
-        <button onclick="itemEdCancel()">Zrušit</button>
-        <button id="ie-delete-btn" onclick="itemEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button>
-      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div><label class="eyebrow">URL obrázku</label><input type="text" id="ie-image" placeholder="img/nazev.png"></div><div><label class="eyebrow">URL tech. náčrtku</label><input type="text" id="ie-blueprint"></div></div>
+      <div style="margin-bottom:12px"><label class="eyebrow">Související ID (čárkou)</label><input type="text" id="ie-related"></div>
+      <div style="margin-top:20px;display:flex;gap:10px"><button class="primary" onclick="itemEdSave()">💾 Uložit</button><button onclick="itemEdCancel()">Zrušit</button><button id="ie-delete-btn" onclick="itemEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button></div>
     </div>
-    </div><!-- /editorTabItems -->
-
   </div>
 
 </main>
@@ -3267,11 +3168,7 @@ function showPage(page) {
     document.getElementById('page-timeline').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'editor') {
-    document.getElementById('editorTabMain').style.display = '';
-    document.getElementById('editorTabItems').style.display = 'none';
-    document.getElementById('edTabMain').classList.add('active');
-    document.getElementById('edTabItems').classList.remove('active');
-    editorRenderList();
+    editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
     document.getElementById('page-editor').classList.add('active');
@@ -3343,11 +3240,7 @@ function showPageDirect(page) {
     document.getElementById('page-timeline').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'editor') {
-    document.getElementById('editorTabMain').style.display = '';
-    document.getElementById('editorTabItems').style.display = 'none';
-    document.getElementById('edTabMain').classList.add('active');
-    document.getElementById('edTabItems').classList.remove('active');
-    editorRenderList();
+    editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
     document.getElementById('page-editor').classList.add('active');
@@ -3934,6 +3827,49 @@ function editorRenderList(items) {
   `).join('');
 }
 
+function editorFilterAll() {
+  const q = (document.getElementById('editorSearch').value||'').toLowerCase();
+  const cat = document.getElementById('editorCatFilter').value;
+  const list = document.getElementById('editorList');
+  let html = '';
+
+  // DATA entries (unless filtering items only)
+  if (cat !== '__items__') {
+    let dataItems = DATA.slice();
+    if (cat) dataItems = dataItems.filter(d => d.category === cat);
+    if (q) dataItems = dataItems.filter(d => d.name.toLowerCase().includes(q) || d.id.includes(q));
+    html += dataItems.map(item => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="editorEdit('${item.id}')">
+        <span style="font-size:20px;width:28px;text-align:center">${item.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:13px">${item.name}</div>
+          <div style="font-size:11px;color:var(--text-faint)">${CATEGORY_META[item.category]?.title || item.category}</div>
+        </div>
+        <span class="tag" style="font-size:10px">záznam</span>
+      </div>
+    `).join('');
+  }
+
+  // ITEMS_DATA entries (unless filtering non-items)
+  if (!cat || cat === '__items__') {
+    let items = ITEMS_DATA.slice();
+    if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.id.includes(q));
+    html += items.map(item => {
+      const rc = RARITY_CLASS[item.rarity] || '';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="itemEdEdit('${item.id}')">
+        <span style="font-size:20px;width:28px;text-align:center">${item.icon||'📦'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:13px">${item.name}</div>
+          <div style="font-size:11px;color:var(--text-faint)">${(item.categories||[]).join(', ')} · <span class="${rc}">${item.rarity||''}</span></div>
+        </div>
+        <span class="tag tag-brass" style="font-size:10px">předmět</span>
+      </div>`;
+    }).join('');
+  }
+
+  list.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-faint)">Žádné výsledky</div>';
+}
+
 function editorFilter() {
   const q = document.getElementById('editorSearch').value.toLowerCase();
   const cat = document.getElementById('editorCatFilter').value;
@@ -4136,22 +4072,7 @@ function updateCounts() {
    ══════════════════════════════════════════════════════════ */
 let itemEdEditingId = null;
 
-function editorSwitchTab(tab) {
-  document.getElementById('editorTabMain').style.display = tab === 'main' ? '' : 'none';
-  document.getElementById('editorTabItems').style.display = tab === 'items' ? '' : 'none';
-  document.getElementById('edTabMain').classList.toggle('active', tab === 'main');
-  document.getElementById('edTabItems').classList.toggle('active', tab === 'items');
-  if (tab === 'main') { editorFilter(); }
-  if (tab === 'items') {
-    if (typeof ITEM_CATEGORIES === 'undefined' || typeof ITEMS_DATA === 'undefined') {
-      document.getElementById('itemEdList').innerHTML = '<div style="padding:20px;color:var(--accent-blood)">Chyba: soubor predmety-data.js nebyl načten. Zkontroluj, že je v repozitáři vedle index.html.</div>';
-      return;
-    }
-    itemEdInitCatFilter();
-    document.getElementById('itemEdSearch').value = '';
-    itemEdRenderList(ITEMS_DATA);
-  }
-}
+
 
 function itemEdInitCatFilter() {
   if (typeof ITEM_CATEGORIES === 'undefined') return;
