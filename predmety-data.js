@@ -138,6 +138,33 @@ ITEMS_DATA = [
   blueprintLabel: "",
   attunement: "Ano",
   relatedIds: []
+},
+{
+  id: "dwimeritova-pouta",
+  name: "Dwimeritová pouta",
+  categories: ["Magické předměty", "Běžné předměty"],
+  subcategory: "Ostatní magické",
+  rarity: "Velmi vzácný",
+  icon: "⛓️",
+  excerpt: "Pouta z antimagického kovu dwimerit. Spoutaná osoba není schopna sesílat žádná kouzla — vrozené schopnosti zůstávají nedotčeny.",
+  type: "Antimagický předmět (pouta)",
+  damage: "",
+  ac: "",
+  cost: "",
+  weight: "4.5 kg",
+  material: "Dwimerit — antimagická slitina",
+  properties: "Spoutaný tvor nemůže sesílat kouzla ani používat magické schopnosti. Vrozené a zvláštní rasové schopnosti nejsou dotčeny. SO na vyproštění: 25.",
+  special: "Tato pouta z kovu zvaného dwimerit působí jako přirozená antimagická rušička. Spoutaná osoba není schopna sesílat žádná kouzla — arkánní, božská ani druidská magie nefunguje, dokud jsou pouta nasazena. Vrozené a zvláštní rasové schopnosti nejsou nijak dotčeny. Pouta nelze otevřít magicky — kouzla jako Zaklep na ně nemají žádný účinek. Klíč, nebo velmi zdatný zámečník.",
+  description: "Dwimeritová pouta jsou těžká, hrubě kovaná okova spojená silným řetězem o délce asi čtyř stop. Kov má charakteristickou tmavě šedou barvu s matným, téměř mastným povrchem, který pohlcuje světlo místo toho, aby ho odrážel. Na dotek jsou pouta nepříjemně studená — a to i v rozpáleném poledním slunci. Kouzelníci, kteří se k nim přiblíží, popisují zvláštní pocit prázdnoty, jako by se kolem pout vzduch zahustil a magie z něj vyprchala. Čtyři kruhy — dva na zápěstí, dva na kotníky — jsou spojeny středovým článkem, ke kterému se sbíhají oba řetězy. Zámky jsou jednoduché kolíkové konstrukce, ale vyrobené ze stejného kovu, takže jsou imunní vůči magickému odemykání. Celý aparát váží téměř pět kilogramů a nosit ho na sobě je samo o sobě trestem — na což dwimeritový řemeslníci jistě spoléhali.",
+  crafting: "Dwimerit je jedním z nejvzácnějších kovů ve světě Aekildae a jeho zpracování je řemeslem, které ovládá jen hrstka kovářů — většina z nich v službách Karnnelské Inkvizice. Surová ruda se těží výhradně v hlubinných žilách pod pohořím Cruinnece, kde se dwimerit vyskytuje jako tmavé, sklovité krystaly prorostlé žílami běžné železné rudy. Tavení dwimeritové rudy vyžaduje pec vyhřátou na teploty, kterých běžné dřevěné uhlí nedosáhne — kováři proto používají směs dřevěného uhlí a drceného salamandrového kamene, který hoří pomalým, ale nesmírně žhavým plamenem. Při tavení se z rudy uvolňuje charakteristický namodralý dým s pachem připomínajícím ozón po bouřce. Hotový kov se nedá přetavit ani přetvářet — dwimeritový předmět má tvar, který mu kovář dal napoprvé, navždy. Pokus o přetavení vede ke ztrátě antimagických vlastností.",
+  history: "Nejstarší známé použití dwimeritových pout sahá hluboko do historie Aekildae. V hrobce na ostrově Pancha v souostroví Mancha Vancha byl okolo roku 315 pohřben mocný nekromant X — a jeho kostra byla spoutána právě dwimeritovými pouty, aby ani ve smrti nemohl použít svou strašlivou moc. Když mu dobrodruzi o patnáct století později pouta sejmuli, kostra se komprimovala v lebku velikosti pěsti — první krok k jeho pozdějšímu vzkříšení. Tento incident je dodnes největším varováním před neuváženým odstraňováním dwimeritových pout z čehokoli, co je jimi spoutáno. Karnnelská Inkvizice je dnes největším odběratelem dwimeritových výrobků — používá je k zadržování podezřelých z čarodějnictví. Rytířstvo D'hoxarovo vlastní několik párů, které má uloženy v arzenálu hradu Naris pro případ střetu s mocnými kouzelníky.",
+  trivia: "Mezi kouzelníky koluje ponurý vtip: 'Co je horší než dwimeritová pouta? Dwimeritová pouta a inkvizitor, který má klíč.' Ve skutečnosti je na tom vtipu pravdy více, než by si kdokoli přál. Zajímavostí je, že dwimerit nemá žádný účinek na božskou magii kleriků v některých teologických výkladech — Pentateistická církev D'hoxara totiž tvrdí, že zázraky nejsou magie, nýbrž projev boží vůle. Inkvizice tuto teologickou nuanci ráda přehlíží, když jí to vyhovuje. Praktická poznámka pro dobrodruhy: pokud máte ve skupině kouzelníka a najdete dwimeritová pouta, neschovávejte je do jeho batohu. Čaroděj Darius Sorin to jednou zkusil a dva dny nemohl seslat ani Světlo.",
+  image: "img/Dwimeritova_pouta1.png",
+  imageLabel: "Dwimeritová pouta",
+  blueprint: "",
+  blueprintLabel: "",
+  attunement: "Ne",
+  relatedIds: ["nekromant-x", "inkvizice", "magie-ve-svete"]
 }
 ];
 
