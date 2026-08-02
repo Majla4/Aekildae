@@ -111,6 +111,33 @@ ITEMS_DATA = [
   blueprintLabel: "Hůrecké listí",
   attunement: "Ano",
   relatedIds: []
+},
+{
+  id: "komuso-no-fue",
+  name: "Komuso No Fue",
+  categories: ["Magické předměty"],
+  subcategory: "Ostatní magické",
+  rarity: "Vzácný",
+  icon: "🎵",
+  excerpt: "Flétna mnicha bez tváře. Její hluboký, klidný tón dokáže utišit lidské srdce a otevřít mysl naslouchajícího.",
+  type: "Zázračný předmět (hudební nástroj)",
+  damage: "",
+  ac: "",
+  cost: "",
+  weight: "0.3 kg",
+  material: "Vybělená kost neznámého tvora, červený lakový pigment",
+  properties: "Vyžaduje zdatnost s hudebními nástroji. Hra trvá min. 10 minut pro aktivaci efektu.",
+  special: "Když na tuto flétnu hraješ alespoň 10 minut, všichni tvorové, kteří tě slyší a nejsou vůči tobě nepřátelští, si musí hodit záchranný hod na Moudrost (SO 13). Při neúspěchu se tvor cítí uklidněný a otevřený — jeho nedůvěra a obezřetnost vůči tobě mizí. Po dobu 1 hodiny máš vůči němu výhodu na hod na Přesvědčování a Vystupování (CHA). Tvor se ti stává nakloněný, ale efekt neovlivní jeho přesvědčení ani věrnost — pouze jeho ochotu naslouchat.",
+  description: "Komuso No Fue je flétna, která nevydává pouhé tóny — vydává klid. Na první pohled připomíná kostěnou trubici o délce asi dvou píďí, vybělené do barvy starého slonoviny. Celý povrch pokrývá spletitý ornamentální vzor vyvedený rudým lakovým pigmentem — propletené spirály, vlnky a uzly, které při delším pozorování působí dojmem nekonečného proudění. Tři hrací otvory jsou rozmístěné v horní třetině nástroje a oddělené jemnými prstenci vyřezanými přímo do kosti. Oba konce flétny jsou zakončeny širšími manžetami se soustřednými kroužky. Nástroj leží v ruce překvapivě příjemně — jako by byl tvarován pro konkrétní dlaň, ať už ji drží kdokoli. Zvuk flétny je hluboký, klidný a jemný jako dech podzimního větru procházejícího bambusovým hájem. I ten, kdo nikdy nehrál na žádný nástroj, dokáže z Komuso No Fue vyloudit čistý tón — ale teprve v rukou zdatného hráče se probouzí její skutečná moc.",
+  crafting: "O výrobě Komuso No Fue se ví pramálo. Materiál, z něhož je vyrobena, nedokázal identifikovat žádný řemeslník ani alchymista v Ækildae — není to slonovina, není to drak, není to žádný známý tvor. Kost je lehká, téměř dutá, ale tvrdší než ocel — pokus o pilování diamantovým pilníkem nezanechal ani škrábanec. Rudý pigment ornamentů je vsáklý hluboko do struktury kosti, jako by tam rostl odjakživa. Někteří učenci z Akademie v Thalee se domnívají, že flétna nebyla vyrobena v tradičním smyslu — že ornament není namalován, ale vyjevil se sám, když kost vyschla a červená barva vytlačila na povrch vzor, který v ní dřímal.",
+  history: "Flétna nese jméno v jazyce, který nikdo v Ækildae nezná. Komuso — mnich bez tváře — je pojmenování, které jí dali námořníci z Marashanského impéria, kteří podobný nástroj údajně viděli v rukou poutníků daleko na východě, za hranicemi známého světa. Tito poutníci prý nosili na hlavách hluboké proutěné klobouky zakrývající celý obličej a hráli na bambusové flétny jako formu meditace a modlitby. Jak se nástroj z tak vzdálených krajů dostal do rukou dobrodruhů v Ækildae, zůstává záhadou. Jedna z teorií říká, že flétna nepochází z tohoto světa vůbec — že propadla trhlinami mezi sférami během Velké Konjunkce a od té doby putuje z ruky do ruky, vždy přitahována k tomu, kdo ji potřebuje nejvíce.",
+  trivia: "Říká se, že ten, kdo na ni hraje s čistým úmyslem, dokáže utišit lidské srdce. O tom, co se stane s tím, kdo na ni hraje se zlým úmyslem, se raději nemluví — ale hospodský v Samvillu přísahá, že jednou viděl muže, který se pokusil flétnou očarovat stráže, aby mohl vykrást pokladnu. Flétna prý nevydala jediný tón. Jen tiché syčení, jako když se had plazí po suchém listí. Muž flétnu odhodil a utekl z města. Nikdo ho už neviděl. Každopádně — pokud máte v družině barda, který neustále otravuje ostatní svým hraním, dejte mu raději Komuso No Fue. Alespoň bude okolí uklidňovat místo toho, aby ho přiváděl k šílenství.",
+  image: "img/Komuso_No_Fue1.png",
+  imageLabel: "Komuso No Fue",
+  blueprint: "",
+  blueprintLabel: "",
+  attunement: "Ano",
+  relatedIds: []
 }
 ];
 
