@@ -924,6 +924,19 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 
 <script src="predmety-data.js"></script>
 <script>
+// Fallback if predmety-data.js didn't load
+if (typeof ITEMS_DATA === 'undefined') var ITEMS_DATA = [];
+if (typeof ITEM_CATEGORIES === 'undefined') var ITEM_CATEGORIES = {
+  "Zbraně": { icon: "⚔️", subcats: [] }, "Střelné zbraně": { icon: "🏹", subcats: [] },
+  "Zbroje": { icon: "🛡️", subcats: [] }, "Štíty": { icon: "🔰", subcats: [] },
+  "Lektvary": { icon: "🧪", subcats: [] }, "Svitky": { icon: "📜", subcats: [] },
+  "Magické předměty": { icon: "✨", subcats: [] }, "Běžné předměty": { icon: "🔧", subcats: [] },
+  "Materiály": { icon: "🪨", subcats: [] }, "Suroviny": { icon: "🌿", subcats: [] },
+  "Munice": { icon: "🎯", subcats: [] }, "Dopravní prostředky": { icon: "🚢", subcats: [] },
+  "Batohy": { icon: "🎒", subcats: [] }, "Opasky": { icon: "🪢", subcats: [] },
+  "Pláště": { icon: "🧥", subcats: [] }, "Šperky": { icon: "💍", subcats: [] },
+  "Ostatní předměty": { icon: "📦", subcats: [] }
+};
 /* ══════════════════════════════════════════════════════════════════
    DATA — ukázkový obsah pro demonstraci
    ══════════════════════════════════════════════════════════════════
@@ -3564,7 +3577,8 @@ document.getElementById('mobileToggle').addEventListener('click', () => {
    COUNTS
    ══════════════════════════════════════════════════════════ */
 Object.keys(CATEGORY_META).forEach(cat => {
-  const count = DATA.filter(d => d.category === cat).length;
+  let count = DATA.filter(d => d.category === cat).length;
+  if (cat === 'predmety' && typeof ITEMS_DATA !== 'undefined') count = ITEMS_DATA.length;
   const el = document.getElementById(`count-${cat}`);
   if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
 });
@@ -4110,7 +4124,8 @@ function editorDoImport(event) {
 
 function updateCounts() {
   Object.keys(CATEGORY_META).forEach(cat => {
-    const count = DATA.filter(d => d.category === cat).length;
+    let count = DATA.filter(d => d.category === cat).length;
+    if (cat === 'predmety' && typeof ITEMS_DATA !== 'undefined') count = ITEMS_DATA.length;
     const el = document.getElementById(`count-${cat}`);
     if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
   });
