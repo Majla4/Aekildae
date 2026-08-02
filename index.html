@@ -734,6 +734,14 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
   <div class="section-page" id="page-editor">
     <div class="section-header"><h2>✏️ Editor záznamů</h2></div>
 
+    <!-- TAB SWITCHER -->
+    <div style="display:flex;gap:4px;margin-bottom:16px">
+      <button class="topbar-link active" id="edTabMain" onclick="editorSwitchTab('main')" style="padding:8px 16px">📜 Záznamy</button>
+      <button class="topbar-link" id="edTabItems" onclick="editorSwitchTab('items')" style="padding:8px 16px">🗡️ Předměty</button>
+    </div>
+
+    <!-- ═══ MAIN TAB ═══ -->
+    <div id="editorTabMain">
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
       <button class="primary" onclick="editorNew()">+ Nový záznam</button>
       <button onclick="editorExport()">⬇ Exportovat DATA (JSON)</button>
@@ -819,6 +827,77 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
         <button id="ef-delete-btn" onclick="editorDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button>
       </div>
     </div>
+    </div><!-- /editorTabMain -->
+
+    <!-- ═══ ITEMS TAB ═══ -->
+    <div id="editorTabItems" style="display:none">
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+      <button class="primary" onclick="itemEdNew()">+ Nový předmět</button>
+      <button onclick="itemEdExport()">⬇ Exportovat předměty (JSON)</button>
+      <button onclick="itemEdImportJson()">⬆ Importovat předměty (JSON)</button>
+      <input type="file" id="itemImportJsonFile" accept=".json" style="display:none" onchange="itemEdDoImportJson(event)">
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="itemEdSearch" placeholder="Hledat předměty…" oninput="itemEdFilter()">
+      <select id="itemEdCatFilter" onchange="itemEdFilter()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
+        <option value="">Všechny kategorie</option>
+      </select>
+    </div>
+    <div id="itemEdList" style="margin-top:14px"></div>
+
+    <!-- ITEM EDIT FORM -->
+    <div id="itemEdForm" style="display:none;margin-top:20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+      <h3 style="color:var(--accent-brass);margin-bottom:14px" id="itemEdFormTitle">Nový předmět</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">ID (auto z názvu)</label><input type="text" id="ie-id" placeholder="auto"></div>
+        <div><label class="eyebrow">Název</label><input type="text" id="ie-name" placeholder="Název předmětu"></div>
+        <div><label class="eyebrow">Ikona</label><input type="text" id="ie-icon" placeholder="⚔️" style="font-size:20px"></div>
+        <div><label class="eyebrow">Vzácnost</label>
+          <select id="ie-rarity" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%">
+            <option>Běžný</option><option>Neobvyklý</option><option>Vzácný</option><option>Velmi vzácný</option><option>Legendární</option><option>Artefakt</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <label class="eyebrow">Kategorie (zaškrtni)</label>
+        <div id="ie-cats" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">Podkategorie</label><input type="text" id="ie-subcat" placeholder="Meče, Lehké zbroje…"></div>
+        <div><label class="eyebrow">Typ</label><input type="text" id="ie-type" placeholder="Zbraň (jednoruční meč)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">Zranění</label><input type="text" id="ie-damage" placeholder="1k8 sečné"></div>
+        <div><label class="eyebrow">AC</label><input type="text" id="ie-ac" placeholder="16"></div>
+        <div><label class="eyebrow">Cena</label><input type="text" id="ie-cost" placeholder="150 zl"></div>
+        <div><label class="eyebrow">Váha</label><input type="text" id="ie-weight" placeholder="1.5 kg"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">Materiál</label><input type="text" id="ie-material"></div>
+        <div><label class="eyebrow">Vyžaduje sladění</label><input type="text" id="ie-attunement" placeholder="Ano / Ne"></div>
+      </div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Krátký popis</label><textarea id="ie-excerpt" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Vlastnosti</label><textarea id="ie-properties" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Zvláštní vlastnosti</label><textarea id="ie-special" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Detailní popis</label><textarea id="ie-description" rows="4" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Výroba</label><textarea id="ie-crafting" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Historie</label><textarea id="ie-history" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:8px"><label class="eyebrow">Zajímavosti</label><textarea id="ie-trivia" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">URL obrázku</label><input type="text" id="ie-image" placeholder="img/nazev.png"></div>
+        <div><label class="eyebrow">URL tech. náčrtku</label><input type="text" id="ie-blueprint" placeholder="img/nazev-planek.png"></div>
+      </div>
+      <div style="margin-bottom:12px"><label class="eyebrow">Související ID (čárkou)</label><input type="text" id="ie-related" placeholder="id-zaznamu-1, id-zaznamu-2"></div>
+
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="primary" onclick="itemEdSave()">💾 Uložit</button>
+        <button onclick="itemEdCancel()">Zrušit</button>
+        <button id="ie-delete-btn" onclick="itemEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button>
+      </div>
+    </div>
+    </div><!-- /editorTabItems -->
+
   </div>
 
 </main>
@@ -3598,29 +3677,11 @@ function itemShowDetail(id) {
   document.getElementById('backBtn').style.display = 'flex';
   setActiveNav('predmety');
 
-  // Gallery
+  // Collect images for lightbox
   const images = [];
   if (item.image) images.push({ src: item.image, label: 'Obrázek' });
   if (item.blueprint) images.push({ src: item.blueprint, label: 'Technický plánek' });
-
-  let galleryHtml = '';
-  if (images.length > 0) {
-    galleryHtml = `<div class="item-gallery">
-      <div class="item-gallery-main" onclick="lightboxOpen(0)">
-        <img id="itemMainImg" src="${images[0].src}" alt="${item.name}">
-        <span class="zoom-hint">🔍 Klikni pro zvětšení</span>
-      </div>
-      ${images.length > 1 ? `<div class="item-gallery-thumbs">
-        ${images.map((img, i) => `<div>
-          <div class="item-gallery-thumb ${i===0?'active':''}" onclick="itemSwitchImg(${i},'${img.src}')">
-            <img src="${img.src}" alt="${img.label}">
-          </div>
-          <div class="item-gallery-thumb-label">${img.label}</div>
-        </div>`).join('')}
-      </div>` : ''}
-    </div>`;
-    window._lightboxImages = images.map(i => i.src);
-  }
+  window._lightboxImages = images.map(i => i.src);
 
   // Hero
   const rc = RARITY_CLASS[item.rarity] || '';
@@ -3635,8 +3696,8 @@ function itemShowDetail(id) {
     </div>
   `;
 
-  // Content
-  let content = galleryHtml;
+  // Content — text only, no gallery
+  let content = '';
   const textSections = [
     ['Popis', item.description], ['Vlastnosti', item.properties], ['Zvláštní vlastnosti', item.special],
     ['Výroba', item.crafting], ['Historie', item.history], ['Zajímavosti', item.trivia]
@@ -3646,7 +3707,7 @@ function itemShowDetail(id) {
   });
   document.getElementById('itemDetailContent').innerHTML = content;
 
-  // Sidebar
+  // Sidebar — info-box + images below
   let sidebar = '<div class="info-box"><div class="info-box-header">Vlastnosti předmětu</div><div class="info-box-body">';
   const rows = [
     ['Typ', item.type], ['Vzácnost', item.rarity], ['Zranění', item.damage], ['AC', item.ac],
@@ -3655,6 +3716,19 @@ function itemShowDetail(id) {
   rows.forEach(([l, v]) => { if (v) sidebar += `<div class="info-row"><span class="info-label">${l}</span><span class="info-value">${v}</span></div>`; });
   sidebar += '</div></div>';
 
+  // Images in sidebar
+  images.forEach((img, i) => {
+    sidebar += `
+      <div class="info-box" style="overflow:hidden">
+        <div class="info-box-header">${img.label}</div>
+        <div style="cursor:zoom-in;position:relative" onclick="lightboxOpen(${i})">
+          <img src="${img.src}" alt="${img.label}" style="width:100%;display:block;border-radius:0 0 var(--radius) var(--radius)">
+          <span style="position:absolute;bottom:6px;right:8px;font-size:10px;color:var(--text-faint);background:rgba(18,20,28,0.8);padding:2px 6px;border-radius:3px">🔍 Zvětšit</span>
+        </div>
+      </div>`;
+  });
+
+  // Related
   if (item.relatedIds && item.relatedIds.length > 0) {
     sidebar += '<div class="info-box related-box"><div class="info-box-header">Související</div>';
     item.relatedIds.forEach(rid => {
@@ -4029,6 +4103,171 @@ function updateCounts() {
     const el = document.getElementById(`count-${cat}`);
     if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
   });
+}
+
+/* ══════════════════════════════════════════════════════════
+   EDITOR — ITEMS TAB
+   ══════════════════════════════════════════════════════════ */
+let itemEdEditingId = null;
+
+function editorSwitchTab(tab) {
+  document.getElementById('editorTabMain').style.display = tab === 'main' ? '' : 'none';
+  document.getElementById('editorTabItems').style.display = tab === 'items' ? '' : 'none';
+  document.getElementById('edTabMain').classList.toggle('active', tab === 'main');
+  document.getElementById('edTabItems').classList.toggle('active', tab === 'items');
+  if (tab === 'items') { itemEdInitCatFilter(); itemEdFilter(); }
+}
+
+function itemEdInitCatFilter() {
+  const sel = document.getElementById('itemEdCatFilter');
+  sel.innerHTML = '<option value="">Všechny kategorie</option>' +
+    Object.keys(ITEM_CATEGORIES).map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function itemEdRenderList(items) {
+  if (!items) items = ITEMS_DATA;
+  document.getElementById('itemEdList').innerHTML = items.map(item => {
+    const rc = RARITY_CLASS[item.rarity] || '';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="itemEdEdit('${item.id}')">
+      <span style="font-size:20px;width:28px;text-align:center">${item.icon||'📦'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:13px">${item.name}</div>
+        <div style="font-size:11px;color:var(--text-faint)">${item.categories.join(', ')} · <span class="${rc}">${item.rarity}</span></div>
+      </div>
+      <span class="tag" style="font-size:10px">${item.id}</span>
+    </div>`;
+  }).join('');
+}
+
+function itemEdFilter() {
+  const q = (document.getElementById('itemEdSearch').value||'').toLowerCase();
+  const cat = document.getElementById('itemEdCatFilter').value;
+  let items = ITEMS_DATA;
+  if (cat) items = items.filter(i => i.categories.includes(cat));
+  if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.id.includes(q));
+  itemEdRenderList(items);
+}
+
+function itemEdBuildCatCheckboxes(selected) {
+  const el = document.getElementById('ie-cats');
+  el.innerHTML = Object.keys(ITEM_CATEGORIES).map(cat => {
+    const checked = selected && selected.includes(cat) ? 'checked' : '';
+    return `<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius);white-space:nowrap">
+      <input type="checkbox" value="${cat}" ${checked} style="accent-color:var(--accent-brass)"> ${ITEM_CATEGORIES[cat].icon} ${cat}
+    </label>`;
+  }).join('');
+}
+
+function itemEdNew() {
+  itemEdEditingId = null;
+  document.getElementById('itemEdFormTitle').textContent = 'Nový předmět';
+  document.getElementById('ie-delete-btn').style.display = 'none';
+  ['ie-id','ie-name','ie-icon','ie-subcat','ie-type','ie-damage','ie-ac','ie-cost','ie-weight','ie-material','ie-attunement','ie-excerpt','ie-properties','ie-special','ie-description','ie-crafting','ie-history','ie-trivia','ie-image','ie-blueprint','ie-related'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ie-rarity').value = 'Běžný';
+  itemEdBuildCatCheckboxes([]);
+  document.getElementById('itemEdForm').style.display = 'block';
+  document.getElementById('itemEdForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function itemEdEdit(id) {
+  const item = ITEMS_DATA.find(i => i.id === id);
+  if (!item) return;
+  itemEdEditingId = id;
+  document.getElementById('itemEdFormTitle').textContent = 'Upravit: ' + item.name;
+  document.getElementById('ie-delete-btn').style.display = 'block';
+  document.getElementById('ie-id').value = item.id;
+  document.getElementById('ie-name').value = item.name;
+  document.getElementById('ie-icon').value = item.icon || '';
+  document.getElementById('ie-rarity').value = item.rarity || 'Běžný';
+  document.getElementById('ie-subcat').value = item.subcategory || '';
+  document.getElementById('ie-type').value = item.type || '';
+  document.getElementById('ie-damage').value = item.damage || '';
+  document.getElementById('ie-ac').value = item.ac || '';
+  document.getElementById('ie-cost').value = item.cost || '';
+  document.getElementById('ie-weight').value = item.weight || '';
+  document.getElementById('ie-material').value = item.material || '';
+  document.getElementById('ie-attunement').value = item.attunement || '';
+  document.getElementById('ie-excerpt').value = item.excerpt || '';
+  document.getElementById('ie-properties').value = item.properties || '';
+  document.getElementById('ie-special').value = item.special || '';
+  document.getElementById('ie-description').value = item.description || '';
+  document.getElementById('ie-crafting').value = item.crafting || '';
+  document.getElementById('ie-history').value = item.history || '';
+  document.getElementById('ie-trivia').value = item.trivia || '';
+  document.getElementById('ie-image').value = item.image || '';
+  document.getElementById('ie-blueprint').value = item.blueprint || '';
+  document.getElementById('ie-related').value = (item.relatedIds || []).join(', ');
+  itemEdBuildCatCheckboxes(item.categories);
+  document.getElementById('itemEdForm').style.display = 'block';
+  document.getElementById('itemEdForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function itemEdSave() {
+  const name = document.getElementById('ie-name').value.trim();
+  if (!name) { alert('Název je povinný.'); return; }
+  let id = document.getElementById('ie-id').value.trim();
+  if (!id) id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const cats = [...document.querySelectorAll('#ie-cats input:checked')].map(cb => cb.value);
+  if (cats.length === 0) { alert('Vyber alespoň jednu kategorii.'); return; }
+  const item = {
+    id, name, categories: cats,
+    subcategory: document.getElementById('ie-subcat').value.trim(),
+    rarity: document.getElementById('ie-rarity').value,
+    icon: document.getElementById('ie-icon').value.trim() || '📦',
+    excerpt: document.getElementById('ie-excerpt').value.trim(),
+    type: document.getElementById('ie-type').value.trim(),
+    damage: document.getElementById('ie-damage').value.trim(),
+    ac: document.getElementById('ie-ac').value.trim(),
+    cost: document.getElementById('ie-cost').value.trim(),
+    weight: document.getElementById('ie-weight').value.trim(),
+    material: document.getElementById('ie-material').value.trim(),
+    properties: document.getElementById('ie-properties').value.trim(),
+    special: document.getElementById('ie-special').value.trim(),
+    description: document.getElementById('ie-description').value.trim(),
+    crafting: document.getElementById('ie-crafting').value.trim(),
+    history: document.getElementById('ie-history').value.trim(),
+    trivia: document.getElementById('ie-trivia').value.trim(),
+    image: document.getElementById('ie-image').value.trim(),
+    blueprint: document.getElementById('ie-blueprint').value.trim(),
+    attunement: document.getElementById('ie-attunement').value.trim(),
+    relatedIds: document.getElementById('ie-related').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  if (itemEdEditingId) { const idx = ITEMS_DATA.findIndex(i => i.id === itemEdEditingId); if (idx >= 0) ITEMS_DATA[idx] = item; }
+  else { if (ITEMS_DATA.find(i => i.id === id)) { alert('Předmět s tímto ID již existuje.'); return; } ITEMS_DATA.push(item); }
+  itemEdCancel(); itemEdFilter();
+  alert('Předmět uložen. Pro trvalé uložení exportuj JSON.');
+}
+
+function itemEdDelete() {
+  if (!itemEdEditingId || !confirm('Opravdu smazat?')) return;
+  const idx = ITEMS_DATA.findIndex(i => i.id === itemEdEditingId);
+  if (idx >= 0) ITEMS_DATA.splice(idx, 1);
+  itemEdCancel(); itemEdFilter();
+}
+
+function itemEdCancel() { document.getElementById('itemEdForm').style.display = 'none'; itemEdEditingId = null; }
+
+function itemEdExport() {
+  const json = JSON.stringify(ITEMS_DATA, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'aekildae-predmety.json'; a.click();
+}
+
+function itemEdImportJson() { document.getElementById('itemImportJsonFile').click(); }
+function itemEdDoImportJson(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) { alert('Neplatný formát.'); return; }
+      if (!confirm('Importovat ' + imported.length + ' předmětů?')) return;
+      ITEMS_DATA.length = 0; imported.forEach(i => ITEMS_DATA.push(i));
+      itemEdFilter(); alert('Import: ' + imported.length + ' předmětů.');
+    } catch (err) { alert('Chyba: ' + err.message); }
+  };
+  reader.readAsText(file); event.target.value = '';
 }
 
 </script>
