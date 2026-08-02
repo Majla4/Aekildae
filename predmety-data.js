@@ -3,7 +3,7 @@
    Samostatný datový soubor pro import do wiki
    ══════════════════════════════════════════════════════════ */
 
-const ITEMS_DATA = [
+ITEMS_DATA = [
 {
   id: "einstein-rosenuv-mesec",
   name: "Einstein-Rosenův měšec",
@@ -106,7 +106,7 @@ const ITEMS_DATA = [
 }
 ];
 
-const ITEM_CATEGORIES = {
+ITEM_CATEGORIES = {
   "Zbraně": { icon: "⚔️", subcats: ["Meče","Obouruční meče","Dýky","Sekery","Obouruční sekery","Palice","Kladiva","Kopí","Hole","Biče","Ostatní zbraně"] },
   "Střelné zbraně": { icon: "🏹", subcats: ["Luky","Kuše","Praky","Pistole","Ostatní střelné"] },
   "Zbroje": { icon: "🛡️", subcats: ["Lehké zbroje","Střední zbroje","Těžké zbroje","Přilby","Rukavice","Boty","Chrániče","Ostatní zbroje"] },

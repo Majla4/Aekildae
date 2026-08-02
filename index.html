@@ -922,21 +922,20 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
   </div>
 </div>
 
-<script src="predmety-data.js"></script>
 <script>
-/* Fallback if predmety-data.js didn't load */
-try { if (!ITEMS_DATA) throw 0; } catch(e) { window.ITEMS_DATA = []; }
-try { if (!ITEM_CATEGORIES) throw 0; } catch(e) {
-  window.ITEM_CATEGORIES = {
-    "Zbraně":{icon:"⚔️",subcats:[]},"Střelné zbraně":{icon:"🏹",subcats:[]},"Zbroje":{icon:"🛡️",subcats:[]},
-    "Štíty":{icon:"🔰",subcats:[]},"Lektvary":{icon:"🧪",subcats:[]},"Svitky":{icon:"📜",subcats:[]},
-    "Magické předměty":{icon:"✨",subcats:[]},"Běžné předměty":{icon:"🔧",subcats:[]},
-    "Materiály":{icon:"🪨",subcats:[]},"Suroviny":{icon:"🌿",subcats:[]},"Munice":{icon:"🎯",subcats:[]},
-    "Dopravní prostředky":{icon:"🚢",subcats:[]},"Batohy":{icon:"🎒",subcats:[]},
-    "Opasky":{icon:"🪢",subcats:[]},"Pláště":{icon:"🧥",subcats:[]},"Šperky":{icon:"💍",subcats:[]},
-    "Ostatní předměty":{icon:"📦",subcats:[]}
-  };
-}
+/* Předem deklarované proměnné pro předměty — přepíše je predmety-data.js pokud se načte */
+var ITEMS_DATA = [];
+var ITEM_CATEGORIES = {
+  "Zbraně":{icon:"⚔️",subcats:[]},"Střelné zbraně":{icon:"🏹",subcats:[]},"Zbroje":{icon:"🛡️",subcats:[]},
+  "Štíty":{icon:"🔰",subcats:[]},"Lektvary":{icon:"🧪",subcats:[]},"Svitky":{icon:"📜",subcats:[]},
+  "Magické předměty":{icon:"✨",subcats:[]},"Běžné předměty":{icon:"🔧",subcats:[]},
+  "Materiály":{icon:"🪨",subcats:[]},"Suroviny":{icon:"🌿",subcats:[]},"Munice":{icon:"🎯",subcats:[]},
+  "Dopravní prostředky":{icon:"🚢",subcats:[]},"Batohy":{icon:"🎒",subcats:[]},
+  "Opasky":{icon:"🪢",subcats:[]},"Pláště":{icon:"🧥",subcats:[]},"Šperky":{icon:"💍",subcats:[]},
+  "Ostatní předměty":{icon:"📦",subcats:[]}
+};
+</script>
+<script src="predmety-data.js"></script>
 /* ══════════════════════════════════════════════════════════════════
    DATA — ukázkový obsah pro demonstraci
    ══════════════════════════════════════════════════════════════════
