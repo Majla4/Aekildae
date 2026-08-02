@@ -3254,8 +3254,13 @@ function showPage(page) {
     document.getElementById('page-timeline').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'editor') {
+    document.getElementById('editorTabMain').style.display = '';
+    document.getElementById('editorTabItems').style.display = 'none';
+    document.getElementById('edTabMain').classList.add('active');
+    document.getElementById('edTabItems').classList.remove('active');
     editorRenderList();
     document.getElementById('editorForm').style.display = 'none';
+    document.getElementById('itemEdForm').style.display = 'none';
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
@@ -3325,7 +3330,13 @@ function showPageDirect(page) {
     document.getElementById('page-timeline').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'editor') {
+    document.getElementById('editorTabMain').style.display = '';
+    document.getElementById('editorTabItems').style.display = 'none';
+    document.getElementById('edTabMain').classList.add('active');
+    document.getElementById('edTabItems').classList.remove('active');
     editorRenderList();
+    document.getElementById('editorForm').style.display = 'none';
+    document.getElementById('itemEdForm').style.display = 'none';
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
