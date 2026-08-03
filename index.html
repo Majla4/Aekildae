@@ -3208,7 +3208,7 @@ function showPage(page) {
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
     const _vInp = document.getElementById('wikiVersionInput');
-    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || '';
+    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
@@ -3282,7 +3282,7 @@ function showPageDirect(page) {
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
     const _vInp = document.getElementById('wikiVersionInput');
-    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || '';
+    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
@@ -4511,20 +4511,14 @@ function editorSaveVersion() {
   showToast('✓ Verze uložena: ' + v, 'brass');
 }
 
-// Načti verzi z localStorage
-(function() {
-  const v = localStorage.getItem('aekildae_version');
-  if (v) document.getElementById('wikiVersion').textContent = '· ' + v;
-  // Nastav pole v editoru při jeho otevření
-  const origEditorLogin = window.editorLogin;
-  window.editorLogin = function() {
-    if (origEditorLogin) origEditorLogin();
-    setTimeout(() => {
-      const inp = document.getElementById('wikiVersionInput');
-      if (inp) inp.value = localStorage.getItem('aekildae_version') || '';
-    }, 100);
-  };
-})();
+
+// Načti verzi z localStorage nebo použij výchozí verzi ze souboru
+const WIKI_VERSION_DEFAULT = 'v2.1';
+const _savedVer = localStorage.getItem('aekildae_version');
+const _displayVer = _savedVer || WIKI_VERSION_DEFAULT;
+document.getElementById('wikiVersion').textContent = '· ' + _displayVer;
+
+function itemsResetToFile() {
   if (!confirm('Zahodit všechny neuložené změny a načíst původní data ze souboru predmety-data.js?')) return;
   itemsStorageClear();
   location.reload();
