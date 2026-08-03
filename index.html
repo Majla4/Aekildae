@@ -527,6 +527,36 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 }
 .pc-portrait-wrap .placeholder-icon { font-size: 40px; opacity: 0.3; align-self: center; }
 
+/* ── INLINE SEKCE — obrázek a audio ── */
+.section-image {
+  margin: 14px 0; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border-soft); cursor: zoom-in;
+}
+.section-image img { width: 100%; display: block; max-height: 500px; object-fit: contain; background: var(--bg-panel-2); }
+.section-image-caption {
+  padding: 6px 10px; font-size: 11px; color: var(--text-faint);
+  background: var(--bg-panel); text-align: center; font-style: italic;
+}
+
+.section-audio {
+  margin: 14px 0; background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+}
+.section-audio-label { font-size: 12px; color: var(--text-dim); white-space: nowrap; flex-shrink: 0; }
+.section-audio audio {
+  flex: 1; height: 36px; min-width: 0;
+  accent-color: var(--accent-brass);
+}
+.section-audio audio::-webkit-media-controls-panel { background: var(--bg-panel-2); }
+
+/* Editor sekce — rozbalovací médium pole */
+.section-media-toggle {
+  font-size: 11px; color: var(--text-faint); cursor: pointer; background: none;
+  border: 1px dashed var(--border); border-radius: 4px; padding: 2px 8px;
+  transition: all 0.12s;
+}
+.section-media-toggle:hover { border-color: var(--accent-brass-dim); color: var(--accent-brass); transform: none; box-shadow: none; }
+
 .pc-photos { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .pc-photo-thumb {
   width: 80px; border-radius: var(--radius); overflow: hidden;
@@ -2771,7 +2801,7 @@ const DATA = [
     sections: [
       { title: "Proroctví Aratornity", text: "Na tajemném ostrově Pansomin kněžka Aratornita pronesla k hrdinům věštbu: blíží se zlomové časy, jejich budoucnost ještě není jasně zapsaná v předivu osudu a záleží jen na nich, na jejich vlastních rozhodnutích, jak se budoucnost s nadcházejícími časy vyrovná. Před nimi stojí velké rozhodnutí a jen podle jeho výsledku se bude Osud dále odvíjet." },
       { title: "Proroctví Marinahael", text: "Stařičká elfská kněžka na ostrově Sentrink Lungsat v Hilaperllas hovořila o starém proroctví, které mělo předpovědět příchod skupiny hrdinů, až bude ostrovům nejhůř, kteří nastolí lepší časy — ale pouze na krátko, neboť zlo nikdy nespí a je připraveno využít každé příležitosti. Na přesné znění si již nevzpomněla." },
-      { title: "Proroctví obřadní lebky", text: "Obřadní lebka v Brilantině srubu pronesla záhadné verše: Nepřítele podoba v okovech se zmítá, druhem svorným může být hned zítra. Sluha nepřítele, otrok i bojovník bývalý, krev svou předci jeho jménem Boha prolévali. Prastaré zlo zase se probouzí, spojenectví nové v boji s ním poslouží. Bídák hanebný ve zbroji tepané k válce a ničení znovu zas povstane." },
+      { title: "Proroctví obřadní lebky", text: "Obřadní lebka v Brilantině srubu pronesla záhadné verše: Nepřítele podoba v okovech se zmítá, druhem svorným může být hned zítra. Sluha nepřítele, otrok i bojovník bývalý, krev svou předci jeho jménem Boha prolévali. Prastaré zlo zase se probouzí, spojenectví nové v boji s ním poslouží. Bídák hanebný ve zbroji tepané k válce a ničení znovu zas povstane.", image: "img/obradni_lebka.png", imageCaption: "Obřadní lebka v Brilantině srubu", audio: "audio/prorocstvi_lebky.mp3", audioLabel: "🔊 Proroctví obřadní lebky" },
       { title: "Vidění sestry Josephin", text: "Josephin Emelin du Antolon, řádová sestra z kláštera Balmard, měla věštecké vize skládající se ze strašlivých výjevů plných smrti, chodících mrtvých a krve. Později viděla svého bratra Remonta bojovat s nemrtvými v dalekých cizích zemích oděného v rodových barvách — proto mu řekla, aby se připojil k hrdinům a naplnil svůj osud." },
       { title: "Naplňování proroctví", text: "Některé části proroctví se již naplnily. Orgoth — tvor zuřivý a zraněný — nalezl pomoc u hrdinů. Remont du Antolon — sluha nepřítele, jehož předci prolévali krev jménem Boha — opustil řád a připojil se ke skupině. Prastaré zlo (nekromant X) se skutečně probouzí. Otázkou zůstává, kdo je bídák hanebný ve zbroji tepané." }
     ],
@@ -3397,10 +3427,20 @@ function renderDetail(item) {
   `;
 
   // Content
-  document.getElementById('detailContent').innerHTML = d.sections.map(s => `
-    <h3>${s.title}</h3>
-    <p>${processWikiLinks(s.text)}</p>
-  `).join('');
+  let contentHtml = '';
+  d.sections.forEach((s, si) => {
+    contentHtml += `<h3>${s.title}</h3><p>${processWikiLinks(s.text)}</p>`;
+    if (s.image) {
+      const caption = s.imageCaption ? `<div class="section-image-caption">${s.imageCaption}</div>` : '';
+      const lbIdx = (window._sectionImages = window._sectionImages || []).push(s.image) - 1;
+      contentHtml += `<div class="section-image" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy">${caption}</div>`;
+    }
+    if (s.audio) {
+      const label = s.audioLabel || '🔊 Přehrát';
+      contentHtml += `<div class="section-audio"><span class="section-audio-label">${label}</span><audio controls src="${s.audio}" preload="none"></audio></div>`;
+    }
+  });
+  document.getElementById('detailContent').innerHTML = contentHtml;
 
   // Sidebar
   let sidebar = '';
@@ -3784,6 +3824,11 @@ function itemSwitchImg(idx, src) {
 
 /* ── LIGHTBOX ── */
 let lightboxIdx = 0;
+function lightboxOpenUrl(src) {
+  window._lightboxImages = [src];
+  lightboxOpen(0);
+}
+
 function lightboxOpen(idx) {
   if (!window._lightboxImages || !window._lightboxImages.length) return;
   lightboxIdx = idx;
@@ -4026,7 +4071,7 @@ function editorEdit(id) {
 
   const d = item.detail || {};
   document.getElementById('ef-sections').innerHTML = '';
-  (d.sections || []).forEach(s => editorAddSection(s.title, s.text));
+  (d.sections || []).forEach(s => editorAddSection(s.title, s.text, s.image, s.imageCaption, s.audio, s.audioLabel));
   if ((d.sections || []).length === 0) editorAddSection();
 
   document.getElementById('ef-infobox-title').value = d.infoBox?.title || '';
@@ -4045,14 +4090,28 @@ function editorEdit(id) {
   document.getElementById('editorForm').scrollIntoView({ behavior: 'smooth' });
 }
 
-function editorAddSection(title, text) {
+function editorAddSection(title, text, image, imageCaption, audio, audioLabel) {
   const el = document.getElementById('ef-sections');
   const div = document.createElement('div');
-  div.style.cssText = 'display:grid;grid-template-columns:200px 1fr auto;gap:8px;margin-bottom:6px;align-items:start';
+  div.style.cssText = 'border:1px solid var(--border-soft);border-radius:var(--radius);padding:10px;margin-bottom:8px;background:var(--bg-panel-2)';
+  const hasMedia = image || audio;
   div.innerHTML = `
-    <input type="text" placeholder="Nadpis sekce" value="${(title||'').replace(/"/g,'&quot;')}">
-    <textarea rows="3" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px;resize:vertical" placeholder="Text sekce…">${text||''}</textarea>
-    <button onclick="this.parentElement.remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>
+    <div style="display:grid;grid-template-columns:180px 1fr auto auto;gap:8px;align-items:start;margin-bottom:6px">
+      <input type="text" placeholder="Nadpis sekce" value="${(title||'').replace(/"/g,'&quot;')}">
+      <textarea rows="3" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px;resize:vertical" placeholder="Text sekce…">${text||''}</textarea>
+      <button class="section-media-toggle" onclick="this.closest('div').nextElementSibling.style.display=this.closest('div').nextElementSibling.style.display==='none'?'':'none';this.textContent=this.closest('div').nextElementSibling.style.display===''?'▲ Média':'📎 Média'" title="Přidat obrázek nebo audio">📎 Média</button>
+      <button onclick="this.closest('div[style]').remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>
+    </div>
+    <div style="display:${hasMedia?'':'none'};background:var(--bg-panel);border:1px solid var(--border-soft);border-radius:var(--radius);padding:10px;margin-top:4px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div><label class="eyebrow">URL obrázku sekce</label><input type="text" class="sec-image" placeholder="img/lebka.png" value="${(image||'').replace(/"/g,'&quot;')}"></div>
+        <div><label class="eyebrow">Popisek obrázku</label><input type="text" class="sec-imageCaption" placeholder="Obřadní lebka Brilanty" value="${(imageCaption||'').replace(/"/g,'&quot;')}"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label class="eyebrow">URL audio souboru</label><input type="text" class="sec-audio" placeholder="audio/prorocstvi.mp3" value="${(audio||'').replace(/"/g,'&quot;')}"></div>
+        <div><label class="eyebrow">Popisek audio</label><input type="text" class="sec-audioLabel" placeholder="🔊 Proroctví obřadní lebky" value="${(audioLabel||'').replace(/"/g,'&quot;')}"></div>
+      </div>
+    </div>
   `;
   el.appendChild(div);
 }
@@ -4105,7 +4164,16 @@ function editorSave() {
 
   const sections = [...document.getElementById('ef-sections').children].map(div => {
     const inputs = div.querySelectorAll('input, textarea');
-    return { title: inputs[0].value, text: inputs[1].value };
+    const s = { title: inputs[0].value, text: inputs[1].value };
+    const img = div.querySelector('.sec-image');
+    const imgCap = div.querySelector('.sec-imageCaption');
+    const aud = div.querySelector('.sec-audio');
+    const audLbl = div.querySelector('.sec-audioLabel');
+    if (img && img.value.trim()) s.image = img.value.trim();
+    if (imgCap && imgCap.value.trim()) s.imageCaption = imgCap.value.trim();
+    if (aud && aud.value.trim()) s.audio = aud.value.trim();
+    if (audLbl && audLbl.value.trim()) s.audioLabel = audLbl.value.trim();
+    return s;
   }).filter(s => s.title || s.text);
 
   const infoRows = [...document.getElementById('ef-infobox-rows').children].map(div => {
