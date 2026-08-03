@@ -869,6 +869,12 @@ var ITEM_CATEGORIES = {
 </script>
 <script src="predmety-data.js"></script>
 <script>
+const WIKI_VERSION_DEFAULT = 'v2.1';
+(function() {
+  const v = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
+  const el = document.getElementById('wikiVersion');
+  if (el) el.textContent = '· ' + v;
+})();
 /* ══════════════════════════════════════════════════════════════════
    DATA — ukázkový obsah pro demonstraci
    ══════════════════════════════════════════════════════════════════
@@ -4513,10 +4519,7 @@ function editorSaveVersion() {
 
 
 // Načti verzi z localStorage nebo použij výchozí verzi ze souboru
-const WIKI_VERSION_DEFAULT = 'v2.1';
-const _savedVer = localStorage.getItem('aekildae_version');
-const _displayVer = _savedVer || WIKI_VERSION_DEFAULT;
-document.getElementById('wikiVersion').textContent = '· ' + _displayVer;
+
 
 function itemsResetToFile() {
   if (!confirm('Zahodit všechny neuložené změny a načíst původní data ze souboru predmety-data.js?')) return;
