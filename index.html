@@ -737,9 +737,12 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <button class="primary" onclick="editorNew()">+ Nový záznam</button>
       <button class="primary" onclick="itemEdNew()">+ Nový předmět</button>
       <button onclick="editorExport()">⬇ Export záznamy</button>
-      <button onclick="itemEdExport()">⬇ Export předměty</button>
+      <button onclick="itemEdExport()">⬇ Export předměty → JSON</button>
       <button onclick="editorImport()">⬆ Import záznamy</button>
       <button onclick="itemEdImportJson()">⬆ Import předměty</button>
+      <button id="ghSaveBtn" class="primary" onclick="ghSaveToGitHub()" style="background:var(--accent-verdigris-dim);border-color:var(--accent-verdigris)" title="Uloží predmety-data.js přímo do GitHub repozitáře">☁️ Uložit na GitHub</button>
+      <button onclick="ghShowSettings()" title="Nastavení GitHub připojení" style="padding:6px 10px">⚙️</button>
+      <button onclick="itemsResetToFile()" style="color:var(--accent-blood);border-color:var(--accent-blood-dim)" title="Zahodí neuložené změny a načte původní data ze souboru">↩ Reset</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="editorDoImport(event)">
       <input type="file" id="itemImportJsonFile" accept=".json" style="display:none" onchange="itemEdDoImportJson(event)">
     </div>
@@ -3470,6 +3473,24 @@ document.getElementById('mobileToggle').addEventListener('click', () => {
 /* ══════════════════════════════════════════════════════════
    COUNTS
    ══════════════════════════════════════════════════════════ */
+// Inteligentní načtení: vezmi verzi s více položkami (soubor vs localStorage)
+const fileItems = ITEMS_DATA.slice(); // záloha dat ze souboru
+const lsLoaded = itemsStorageLoad();
+if (lsLoaded) {
+  if (ITEMS_DATA.length < fileItems.length) {
+    // Soubor má více předmětů — obnov data ze souboru a aktualizuj localStorage
+    ITEMS_DATA.length = 0;
+    fileItems.forEach(i => ITEMS_DATA.push(i));
+    itemsStorageSave();
+    console.log('Soubor má více předmětů — localStorage aktualizován: ' + ITEMS_DATA.length);
+  } else {
+    console.log('Předměty načteny z localStorage: ' + ITEMS_DATA.length);
+  }
+} else {
+  // Žádný localStorage — použij soubor
+  console.log('Předměty načteny ze souboru: ' + ITEMS_DATA.length);
+}
+
 Object.keys(CATEGORY_META).forEach(cat => {
   let count = DATA.filter(d => d.category === cat).length;
   if (cat === 'predmety' && typeof ITEMS_DATA !== 'undefined') count = ITEMS_DATA.length;
@@ -4168,6 +4189,28 @@ function itemEdEdit(id) {
   document.getElementById('itemEdForm').scrollIntoView({ behavior: 'smooth' });
 }
 
+const STORAGE_KEY = 'aekildae_items_v1';
+
+function itemsStorageSave() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ITEMS_DATA)); } catch(e) {}
+}
+
+function itemsStorageLoad() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return false;
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed) || parsed.length === 0) return false;
+    ITEMS_DATA.length = 0;
+    parsed.forEach(i => ITEMS_DATA.push(i));
+    return true;
+  } catch(e) { return false; }
+}
+
+function itemsStorageClear() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
 function itemEdSave() {
   const name = document.getElementById('ie-name').value.trim();
   if (!name) { alert('Název je povinný.'); return; }
@@ -4202,24 +4245,153 @@ function itemEdSave() {
   };
   if (itemEdEditingId) { const idx = ITEMS_DATA.findIndex(i => i.id === itemEdEditingId); if (idx >= 0) ITEMS_DATA[idx] = item; }
   else { if (ITEMS_DATA.find(i => i.id === id)) { alert('Předmět s tímto ID již existuje.'); return; } ITEMS_DATA.push(item); }
+  itemsStorageSave();
   itemEdCancel(); itemEdFilter();
-  alert('Předmět uložen. Pro trvalé uložení exportuj JSON.');
+  updateCounts();
+  showToast('✓ Předmět uložen', 'verdigris');
 }
 
 function itemEdDelete() {
   if (!itemEdEditingId || !confirm('Opravdu smazat?')) return;
   const idx = ITEMS_DATA.findIndex(i => i.id === itemEdEditingId);
   if (idx >= 0) ITEMS_DATA.splice(idx, 1);
+  itemsStorageSave();
   itemEdCancel(); itemEdFilter();
+  updateCounts();
 }
 
 function itemEdCancel() { document.getElementById('itemEdForm').style.display = 'none'; itemEdEditingId = null; }
 
 function itemEdExport() {
+  itemsStorageClear();
   const json = JSON.stringify(ITEMS_DATA, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'aekildae-predmety.json'; a.click();
+  showToast('✓ JSON exportován — nahraj jako predmety-data.js na GitHub', 'brass');
+}
+
+/* ── GITHUB API PŘÍMÉ UKLÁDÁNÍ ── */
+const GH_SETTINGS_KEY = 'aekildae_gh_settings';
+
+function ghGetSettings() {
+  try { return JSON.parse(localStorage.getItem(GH_SETTINGS_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function ghShowSettings() {
+  const s = ghGetSettings();
+  const dialog = document.createElement('div');
+  dialog.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;align-items:center;justify-content:center';
+  dialog.innerHTML = `
+    <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;max-width:480px;width:92%;box-shadow:var(--shadow)">
+      <h3 style="font-family:Cinzel,serif;color:var(--accent-brass);margin-bottom:16px">☁️ Nastavení GitHub ukládání</h3>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px">Zadej údaje o svém GitHub repozitáři. Token potřebuje oprávnění <b>Contents: Write</b>.</p>
+      <div style="margin-bottom:10px"><label class="eyebrow">GitHub uživatelské jméno</label><input type="text" id="gh-owner" placeholder="Majla4" value="${s.owner||''}"></div>
+      <div style="margin-bottom:10px"><label class="eyebrow">Název repozitáře</label><input type="text" id="gh-repo" placeholder="Aekildae" value="${s.repo||''}"></div>
+      <div style="margin-bottom:10px"><label class="eyebrow">Větev (branch)</label><input type="text" id="gh-branch" placeholder="dnd-wiki" value="${s.branch||'dnd-wiki'}"></div>
+      <div style="margin-bottom:10px"><label class="eyebrow">Cesta k souboru</label><input type="text" id="gh-path" placeholder="predmety-data.js" value="${s.path||'predmety-data.js'}"></div>
+      <div style="margin-bottom:16px"><label class="eyebrow">Personal Access Token</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" value="${s.token||''}">
+        <div style="font-size:11px;color:var(--text-faint);margin-top:4px">Token vytvoříš na GitHub.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="primary" onclick="ghSaveSettings()">Uložit nastavení</button>
+        <button onclick="this.closest('div[style]').remove()">Zrušit</button>
+      </div>
+    </div>`;
+  document.body.appendChild(dialog);
+}
+
+function ghSaveSettings() {
+  const s = {
+    owner: document.getElementById('gh-owner').value.trim(),
+    repo: document.getElementById('gh-repo').value.trim(),
+    branch: document.getElementById('gh-branch').value.trim() || 'dnd-wiki',
+    path: document.getElementById('gh-path').value.trim() || 'predmety-data.js',
+    token: document.getElementById('gh-token').value.trim()
+  };
+  if (!s.owner || !s.repo || !s.token) { alert('Vyplň uživatelské jméno, repozitář a token.'); return; }
+  localStorage.setItem(GH_SETTINGS_KEY, JSON.stringify(s));
+  document.querySelector('div[style*="inset:0"]').remove();
+  showToast('✓ Nastavení uloženo', 'verdigris');
+}
+
+async function ghSaveToGitHub() {
+  const s = ghGetSettings();
+  if (!s.owner || !s.repo || !s.token) { ghShowSettings(); return; }
+
+  const btn = document.getElementById('ghSaveBtn');
+  if (btn) { btn.textContent = '⏳ Ukládám…'; btn.disabled = true; }
+
+  try {
+    const apiBase = `https://api.github.com/repos/${s.owner}/${s.repo}/contents/${s.path}`;
+    const headers = {
+      'Authorization': `token ${s.token}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    // 1. Získej aktuální SHA souboru
+    let sha = '';
+    try {
+      const r = await fetch(`${apiBase}?ref=${s.branch}`, { headers });
+      if (r.ok) { const d = await r.json(); sha = d.sha; }
+    } catch(e) {}
+
+    // 2. Vygeneruj obsah souboru
+    const content = generateItemsFileContent();
+    const encoded = btoa(unescape(encodeURIComponent(content)));
+
+    // 3. Ulož soubor
+    const body = {
+      message: `Aktualizace předmětů (${new Date().toLocaleString('cs-CZ')})`,
+      content: encoded,
+      branch: s.branch
+    };
+    if (sha) body.sha = sha;
+
+    const r = await fetch(apiBase, { method: 'PUT', headers, body: JSON.stringify(body) });
+
+    if (r.ok) {
+      itemsStorageClear();
+      showToast('✓ Předměty uloženy přímo na GitHub!', 'verdigris');
+    } else {
+      const err = await r.json();
+      throw new Error(err.message || r.status);
+    }
+  } catch(e) {
+    showToast('✕ Chyba: ' + e.message, 'blood');
+    console.error('GitHub save error:', e);
+  } finally {
+    if (btn) { btn.textContent = '☁️ Uložit na GitHub'; btn.disabled = false; }
+  }
+}
+
+function generateItemsFileContent() {
+  return `/* ══════════════════════════════════════════════════════════
+   PŘEDMĚTY — Svět Aekildae
+   Automaticky generováno editorem wiki
+   ══════════════════════════════════════════════════════════ */
+
+ITEMS_DATA = ${JSON.stringify(ITEMS_DATA, null, 2)};
+
+ITEM_CATEGORIES = ${JSON.stringify(ITEM_CATEGORIES, null, 2)};
+`;
+}
+
+function showToast(msg, type) {
+  const colors = { verdigris: 'var(--accent-verdigris)', brass: 'var(--accent-brass-dim)', blood: 'var(--accent-blood)' };
+  const toast = document.createElement('div');
+  toast.style.cssText = `position:fixed;bottom:20px;right:20px;background:${colors[type]||colors.verdigris};color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.4);max-width:340px`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), type === 'blood' ? 6000 : 4000);
+}
+
+function itemsResetToFile() {
+  if (!confirm('Zahodit všechny neuložené změny a načíst původní data ze souboru predmety-data.js?')) return;
+  itemsStorageClear();
+  location.reload();
 }
 
 function itemEdImportJson() { document.getElementById('itemImportJsonFile').click(); }
@@ -4232,7 +4404,7 @@ function itemEdDoImportJson(event) {
       if (!Array.isArray(imported)) { alert('Neplatný formát.'); return; }
       if (!confirm('Importovat ' + imported.length + ' předmětů?')) return;
       ITEMS_DATA.length = 0; imported.forEach(i => ITEMS_DATA.push(i));
-      itemEdFilter(); alert('Import: ' + imported.length + ' předmětů.');
+      itemsStorageSave(); itemEdFilter(); alert('Import: ' + imported.length + ' předmětů.');
     } catch (err) { alert('Chyba: ' + err.message); }
   };
   reader.readAsText(file); event.target.value = '';
