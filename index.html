@@ -3432,8 +3432,17 @@ function renderDetail(item) {
     contentHtml += `<h3>${s.title}</h3><p>${processWikiLinks(s.text)}</p>`;
     if (s.image) {
       const caption = s.imageCaption ? `<div class="section-image-caption">${s.imageCaption}</div>` : '';
-      const lbIdx = (window._sectionImages = window._sectionImages || []).push(s.image) - 1;
-      contentHtml += `<div class="section-image" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy">${caption}</div>`;
+      const w = s.imageWidth || '100%';
+      const h = s.imageHeight ? `max-height:${s.imageHeight};` : 'max-height:500px;';
+      const align = s.imageAlign || '';
+      const float = s.imageFloat;
+      let wrapStyle = `width:${w};`;
+      if (float && align === 'left') wrapStyle += 'float:left;margin:0 16px 12px 0;';
+      else if (float && align === 'right') wrapStyle += 'float:right;margin:0 0 12px 16px;';
+      else if (align === 'center') wrapStyle += 'margin:0 auto;';
+      else if (align === 'right') wrapStyle += 'margin-left:auto;';
+      contentHtml += `<div class="section-image" style="${wrapStyle}" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy" style="width:100%;${h}object-fit:contain;">${caption}</div>`;
+      if (float) contentHtml += '<div style="clear:both"></div>';
     }
     if (s.audio) {
       const label = s.audioLabel || '🔊 Přehrát';
@@ -4071,7 +4080,7 @@ function editorEdit(id) {
 
   const d = item.detail || {};
   document.getElementById('ef-sections').innerHTML = '';
-  (d.sections || []).forEach(s => editorAddSection(s.title, s.text, s.image, s.imageCaption, s.audio, s.audioLabel));
+  (d.sections || []).forEach(s => editorAddSection(s.title, s.text, s.image, s.imageCaption, s.audio, s.audioLabel, s.imageWidth, s.imageHeight, s.imageAlign, s.imageFloat));
   if ((d.sections || []).length === 0) editorAddSection();
 
   document.getElementById('ef-infobox-title').value = d.infoBox?.title || '';
@@ -4090,7 +4099,7 @@ function editorEdit(id) {
   document.getElementById('editorForm').scrollIntoView({ behavior: 'smooth' });
 }
 
-function editorAddSection(title, text, image, imageCaption, audio, audioLabel) {
+function editorAddSection(title, text, image, imageCaption, audio, audioLabel, image_width, image_height, image_align, image_float) {
   const el = document.getElementById('ef-sections');
   const div = document.createElement('div');
   div.style.cssText = 'border:1px solid var(--border-soft);border-radius:var(--radius);padding:10px;margin-bottom:8px;background:var(--bg-panel-2)';
@@ -4106,6 +4115,17 @@ function editorAddSection(title, text, image, imageCaption, audio, audioLabel) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
         <div><label class="eyebrow">URL obrázku sekce</label><input type="text" class="sec-image" placeholder="img/lebka.png" value="${(image||'').replace(/"/g,'&quot;')}"></div>
         <div><label class="eyebrow">Popisek obrázku</label><input type="text" class="sec-imageCaption" placeholder="Obřadní lebka Brilanty" value="${(imageCaption||'').replace(/"/g,'&quot;')}"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+        <div><label class="eyebrow">Šířka obrázku</label><input type="text" class="sec-imageWidth" placeholder="např. 400px nebo 60%" value="${(image_width||'').replace(/"/g,'&quot;')}"></div>
+        <div><label class="eyebrow">Výška obrázku</label><input type="text" class="sec-imageHeight" placeholder="např. 300px nebo auto" value="${(image_height||'').replace(/"/g,'&quot;')}"></div>
+        <div><label class="eyebrow">Zarovnání</label><select class="sec-imageAlign" style="font-family:Inter,sans-serif;font-size:12px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px;width:100%">
+          <option value="" ${!image_align?'selected':''}>Plná šířka</option>
+          <option value="left" ${image_align==='left'?'selected':''}>Vlevo</option>
+          <option value="center" ${image_align==='center'?'selected':''}>Na střed</option>
+          <option value="right" ${image_align==='right'?'selected':''}>Vpravo</option>
+        </select></div>
+        <div style="display:flex;align-items:flex-end"><label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" class="sec-imageFloat" ${image_float?'checked':''} style="accent-color:var(--accent-brass)"> Obtékat text</label></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div><label class="eyebrow">URL audio souboru</label><input type="text" class="sec-audio" placeholder="audio/prorocstvi.mp3" value="${(audio||'').replace(/"/g,'&quot;')}"></div>
@@ -4167,10 +4187,18 @@ function editorSave() {
     const s = { title: inputs[0].value, text: inputs[1].value };
     const img = div.querySelector('.sec-image');
     const imgCap = div.querySelector('.sec-imageCaption');
+    const imgW = div.querySelector('.sec-imageWidth');
+    const imgH = div.querySelector('.sec-imageHeight');
+    const imgAlign = div.querySelector('.sec-imageAlign');
+    const imgFloat = div.querySelector('.sec-imageFloat');
     const aud = div.querySelector('.sec-audio');
     const audLbl = div.querySelector('.sec-audioLabel');
     if (img && img.value.trim()) s.image = img.value.trim();
     if (imgCap && imgCap.value.trim()) s.imageCaption = imgCap.value.trim();
+    if (imgW && imgW.value.trim()) s.imageWidth = imgW.value.trim();
+    if (imgH && imgH.value.trim()) s.imageHeight = imgH.value.trim();
+    if (imgAlign && imgAlign.value) s.imageAlign = imgAlign.value;
+    if (imgFloat && imgFloat.checked) s.imageFloat = true;
     if (aud && aud.value.trim()) s.audio = aud.value.trim();
     if (audLbl && audLbl.value.trim()) s.audioLabel = audLbl.value.trim();
     return s;
