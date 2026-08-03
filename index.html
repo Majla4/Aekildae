@@ -740,9 +740,6 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <button onclick="itemEdExport()">⬇ Export předměty → JSON</button>
       <button onclick="editorImport()">⬆ Import záznamy</button>
       <button onclick="itemEdImportJson()">⬆ Import předměty</button>
-      <button id="ghSaveBtn" class="primary" onclick="ghSaveToGitHub()" style="background:var(--accent-verdigris-dim);border-color:var(--accent-verdigris)" title="Uloží predmety-data.js přímo do GitHub repozitáře">☁️ Uložit na GitHub</button>
-      <button onclick="ghShowSettings()" title="Nastavení GitHub připojení" style="padding:6px 10px">⚙️</button>
-      <button onclick="itemsResetToFile()" style="color:var(--accent-blood);border-color:var(--accent-blood-dim)" title="Zahodí neuložené změny a načte původní data ze souboru">↩ Reset</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="editorDoImport(event)">
       <input type="file" id="itemImportJsonFile" accept=".json" style="display:none" onchange="itemEdDoImportJson(event)">
     </div>
