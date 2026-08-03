@@ -779,7 +779,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
         <div><label class="eyebrow">ID</label><input type="text" id="ef-id" placeholder="nazev-zaznamu"></div>
         <div><label class="eyebrow">Název</label><input type="text" id="ef-name" placeholder="Jméno záznamu"></div>
-        <div><label class="eyebrow">Kategorie</label><select id="ef-category" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%"><option value="svet">Svět</option><option value="bestiar">Bestiář</option><option value="postavy">Postavy (NPC)</option><option value="hraci">Hráčské postavy</option><option value="lokace">Lokace</option><option value="frakce">Frakce</option></select></div>
+        <div><label class="eyebrow">Kategorie</label><select id="ef-category" onchange="editorTogglePhotos(this.value)" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%"><option value="svet">Svět</option><option value="bestiar">Bestiář</option><option value="postavy">Postavy (NPC)</option><option value="hraci">Hráčské postavy</option><option value="lokace">Lokace</option><option value="frakce">Frakce</option></select></div>
         <div><label class="eyebrow">Ikona</label><input type="text" id="ef-icon" placeholder="👤" style="font-size:20px"></div>
       </div>
       <div style="margin-bottom:12px"><label class="eyebrow">Tagy (čárkou)</label><input type="text" id="ef-tags" placeholder="tag1, tag2"></div>
@@ -791,6 +791,13 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <div id="ef-infobox-rows"></div><button onclick="editorAddInfoRow()" style="margin-top:8px;font-size:12px">+ Přidat řádek</button>
       <h4 style="color:var(--accent-brass);margin:16px 0 8px">Související</h4>
       <div id="ef-related"></div><button onclick="editorAddRelated()" style="margin-top:8px;font-size:12px">+ Přidat odkaz</button>
+
+      <div id="ef-photos-section" style="display:none">
+        <h4 style="color:var(--accent-brass);margin:16px 0 8px">📷 Fotografie postavy</h4>
+        <div id="ef-photos"></div>
+        <button onclick="editorAddPhoto()" style="margin-top:8px;font-size:12px">+ Přidat fotografii</button>
+      </div>
+
       <div style="margin-top:20px;display:flex;gap:10px"><button class="primary" onclick="editorSave()">💾 Uložit</button><button onclick="editorCancel()">Zrušit</button><button id="ef-delete-btn" onclick="editorDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button></div>
     </div>
     <div id="itemEdForm" style="display:none;margin-top:20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
@@ -3970,6 +3977,8 @@ function editorNew() {
   document.getElementById('ef-sections').innerHTML = '';
   document.getElementById('ef-infobox-rows').innerHTML = '';
   document.getElementById('ef-related').innerHTML = '';
+  document.getElementById('ef-photos').innerHTML = '';
+  editorTogglePhotos('postavy');
   editorAddSection();
   editorAddInfoRow();
   document.getElementById('editorForm').style.display = 'block';
@@ -4002,6 +4011,10 @@ function editorEdit(id) {
   document.getElementById('ef-related').innerHTML = '';
   (d.related || []).forEach(r => editorAddRelated(r.id, r.name, r.icon));
 
+  document.getElementById('ef-photos').innerHTML = '';
+  editorTogglePhotos(item.category);
+  (item.photos || []).forEach(p => editorAddPhoto(p.src, p.label));
+
   document.getElementById('editorForm').style.display = 'block';
   document.getElementById('editorForm').scrollIntoView({ behavior: 'smooth' });
 }
@@ -4025,6 +4038,22 @@ function editorAddInfoRow(label, value) {
   div.innerHTML = `
     <input type="text" placeholder="Popisek" value="${(label||'').replace(/"/g,'&quot;')}">
     <input type="text" placeholder="Hodnota" value="${(value||'').replace(/"/g,'&quot;')}">
+    <button onclick="this.parentElement.remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>
+  `;
+  el.appendChild(div);
+}
+
+function editorTogglePhotos(cat) {
+  document.getElementById('ef-photos-section').style.display = cat === 'hraci' ? '' : 'none';
+}
+
+function editorAddPhoto(src, label) {
+  const el = document.getElementById('ef-photos');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 160px auto;gap:8px;margin-bottom:6px;align-items:center';
+  div.innerHTML = `
+    <input type="text" placeholder="Cesta k fotografii, např. img/hraci/jmeno_front.png" value="${src||''}">
+    <input type="text" placeholder="Popisek (Přední pohled…)" value="${label||''}">
     <button onclick="this.parentElement.remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>
   `;
   el.appendChild(div);
@@ -4063,6 +4092,11 @@ function editorSave() {
     return { id: inputs[0].value, name: inputs[1].value, icon: inputs[2].value || '📄' };
   }).filter(r => r.id);
 
+  const photos = [...document.getElementById('ef-photos').children].map(div => {
+    const inputs = div.querySelectorAll('input');
+    return { src: inputs[0].value.trim(), label: inputs[1].value.trim() };
+  }).filter(p => p.src);
+
   const entry = {
     id,
     name,
@@ -4070,6 +4104,7 @@ function editorSave() {
     icon: document.getElementById('ef-icon').value || '📄',
     tags: document.getElementById('ef-tags').value.split(',').map(t => t.trim()).filter(Boolean),
     excerpt: document.getElementById('ef-excerpt').value,
+    photos: photos.length > 0 ? photos : undefined,
     detail: {
       sections,
       infoBox: { title: document.getElementById('ef-infobox-title').value || 'Info', rows: infoRows },
