@@ -447,10 +447,10 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 }
 .item-card:hover { border-color: var(--accent-brass-dim); transform: translateY(-1px); box-shadow: 0 0 0 1px var(--accent-brass-dim); }
 .item-card-img {
-  width: 100%; aspect-ratio: 4/3; background: var(--bg-panel-2); display: flex;
+  width: 100%; height: 180px; background: var(--bg-panel-2); display: flex;
   align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--border-soft);
 }
-.item-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.item-card-img img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 8px; }
 .item-card-img .placeholder-icon { font-size: 36px; opacity: 0.3; }
 .item-card-body { padding: 10px 12px; flex: 1; display: flex; flex-direction: column; }
 .item-card-rarity { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
@@ -516,9 +516,26 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 .import-zone:hover { border-color: var(--accent-brass-dim); }
 .import-zone.dragover { border-color: var(--accent-brass); background: rgba(201,154,68,0.05); }
 
-/* ══════════════════════════════════════════════════════════
-   ANIMATIONS
-   ══════════════════════════════════════════════════════════ */
+/* ── PLAYER CHARACTER PORTRAITS ── */
+.pc-portrait-wrap {
+  width: 100%; height: 180px; background: var(--bg-panel-2);
+  overflow: hidden; border-bottom: 1px solid var(--border-soft);
+  display: flex; align-items: flex-start; justify-content: center;
+}
+.pc-portrait-wrap img {
+  width: 100%; object-fit: cover; object-position: top center;
+}
+.pc-portrait-wrap .placeholder-icon { font-size: 40px; opacity: 0.3; align-self: center; }
+
+.pc-photos { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.pc-photo-thumb {
+  width: 80px; border-radius: var(--radius); overflow: hidden;
+  border: 2px solid var(--border); cursor: pointer; transition: border-color 0.12s;
+}
+.pc-photo-thumb:hover { border-color: var(--accent-brass-dim); }
+.pc-photo-thumb.active { border-color: var(--accent-brass); }
+.pc-photo-thumb img { width: 100%; display: block; object-fit: cover; }
+.pc-photo-thumb-label { font-size: 9px; color: var(--text-faint); text-align: center; padding: 2px 2px 3px; }
 .fade-in { animation: fadeIn 0.35s ease-out; }
 @keyframes fadeIn {
   0%   { opacity: 0; transform: translateY(8px); }
@@ -2820,6 +2837,11 @@ const DATA = [
 {
   id: "tren", name: "Tren", category: "hraci",
   icon: "🏹", tags: ["hraničář", "Movarie"],
+  photos: [
+    { src: "img/hraci/tren_front.png", label: "Přední pohled" },
+    { src: "img/hraci/tren_back.png", label: "Zadní pohled" },
+    { src: "img/hraci/tren_side.png", label: "Boční pohled" }
+  ],
   excerpt: "Hraničář z Movárské divočiny, vychovaný čarodějnicí Brilantou. Mistrný stopař s magickým prstenem umožňujícím pobyt pod vodou.",
   detail: {
     sections: [
@@ -3291,11 +3313,16 @@ function renderListingCards(items) {
   }
   empty.style.display = 'none';
 
-  grid.innerHTML = items.map(item => `
+  grid.innerHTML = items.map(item => {
+    let thumbHtml;
+    if (item.category === 'hraci' && item.photos && item.photos.length > 0) {
+      thumbHtml = `<div class="pc-portrait-wrap"><img src="${item.photos[0].src}" alt="${item.name}" loading="lazy"></div>`;
+    } else {
+      thumbHtml = `<div class="entry-thumb"><span class="placeholder-icon">${item.icon}</span></div>`;
+    }
+    return `
     <div class="entry-card fade-in" onclick="showDetail('${item.id}')">
-      <div class="entry-thumb">
-        <span class="placeholder-icon">${item.icon}</span>
-      </div>
+      ${thumbHtml}
       <div class="entry-body">
         <div class="entry-name">${item.name}</div>
         <div class="entry-excerpt">${item.excerpt}</div>
@@ -3303,8 +3330,8 @@ function renderListingCards(items) {
           ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 let activeTags = new Set();
@@ -3355,6 +3382,27 @@ function renderDetail(item) {
   // Sidebar
   let sidebar = '';
 
+  // Fotografie hráčské postavy
+  if (item.category === 'hraci' && item.photos && item.photos.length > 0) {
+    window._lightboxImages = item.photos.map(p => p.src);
+    sidebar += `<div class="info-box" style="overflow:hidden">
+      <div class="info-box-header">Fotografie</div>
+      <div style="padding:10px 12px">
+        <div style="cursor:zoom-in;border-radius:4px;overflow:hidden;margin-bottom:8px" onclick="lightboxOpen(0)">
+          <img id="pcMainPhoto" src="${item.photos[0].src}" alt="${item.name}" style="width:100%;display:block;border-radius:4px">
+        </div>
+        ${item.photos.length > 1 ? `<div class="pc-photos">
+          ${item.photos.map((p, i) => `<div>
+            <div class="pc-photo-thumb ${i===0?'active':''}" onclick="pcSwitchPhoto(${i},'${p.src}')">
+              <img src="${p.src}" alt="${p.label||''}">
+            </div>
+            <div class="pc-photo-thumb-label">${p.label||''}</div>
+          </div>`).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }
+
   if (d.infoBox) {
     sidebar += `
       <div class="info-box">
@@ -3386,6 +3434,12 @@ function renderDetail(item) {
   }
 
   document.getElementById('detailSidebar').innerHTML = sidebar;
+}
+
+function pcSwitchPhoto(idx, src) {
+  document.getElementById('pcMainPhoto').src = src;
+  document.querySelectorAll('.pc-photo-thumb').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelector('[onclick^="lightboxOpen"]').onclick = () => lightboxOpen(idx);
 }
 
 function processWikiLinks(text) {
