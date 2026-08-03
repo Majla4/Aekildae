@@ -3431,21 +3431,23 @@ function renderDetail(item) {
   d.sections.forEach((s, si) => {
     contentHtml += `<h3>${s.title}</h3><p>${processWikiLinks(s.text)}</p>`;
     if (s.image) {
-      const caption = s.imageCaption ? `<div class="section-image-caption">${s.imageCaption}</div>` : '';
-      const imgW = s.imageWidth || '100%';
-      const imgH = s.imageHeight || 'auto';
-      const maxH = s.imageHeight ? '' : 'max-height:500px;';
-      const align = s.imageAlign || '';
-      const float = s.imageFloat;
-      let wrapStyle = `display:block;`;
-      if (imgW !== '100%') wrapStyle += `max-width:${imgW};`;
-      if (float && align === 'left') wrapStyle += 'float:left;margin:0 16px 12px 0;';
-      else if (float && align === 'right') wrapStyle += 'float:right;margin:0 0 12px 16px;';
-      else if (align === 'center') wrapStyle += 'margin:0 auto;';
-      else if (align === 'right') wrapStyle += 'margin-left:auto;';
-      const imgStyle = `width:${imgW};height:${imgH};${maxH}object-fit:contain;`;
-      contentHtml += `<div class="section-image" style="${wrapStyle}" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy" style="${imgStyle}">${caption}</div>`;
-      if (float) contentHtml += '<div style="clear:both"></div>';
+      const addUnit = v => v && /^\d+$/.test(v.trim()) ? v.trim()+'px' : (v||'');
+      const w = addUnit(s.imageWidth)  || '100%';
+      const h = addUnit(s.imageHeight) || '';
+      const hStyle = h ? `height:${h};` : 'max-height:500px;';
+      const caption = s.imageCaption ? `<div style="padding:6px 10px;font-size:11px;color:var(--text-faint);background:var(--bg-panel);text-align:center;font-style:italic">${s.imageCaption}</div>` : '';
+      let wrapStyle = `margin:14px 0;border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;display:block;`;
+      if (s.imageWidth)                   wrapStyle += `width:${w};`;
+      if (s.imageAlign === 'center')      wrapStyle += 'margin-left:auto;margin-right:auto;';
+      else if (s.imageAlign === 'right')  wrapStyle += 'margin-left:auto;';
+      if (s.imageFloat && s.imageAlign === 'right') wrapStyle = `float:right;margin:0 0 12px 16px;width:${w};border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;`;
+      else if (s.imageFloat)              wrapStyle = `float:left;margin:0 16px 12px 0;width:${w};border:1px solid var(--border-soft);border-radius:var(--radius);overflow:hidden;`;
+      contentHtml += `<div style="${wrapStyle}" onclick="lightboxOpenUrl('${s.image}')" title="Klikni pro zvětšení">
+        <img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy"
+             style="width:${w};${hStyle}object-fit:contain;display:block;background:var(--bg-panel-2);cursor:zoom-in;">
+        ${caption}
+      </div>`;
+      if (s.imageFloat) contentHtml += '<div style="clear:both"></div>';
     }
     if (s.audio) {
       const label = s.audioLabel || '🔊 Přehrát';
@@ -4196,10 +4198,11 @@ function editorSave() {
     const imgFloat = div.querySelector('.sec-imageFloat');
     const aud = div.querySelector('.sec-audio');
     const audLbl = div.querySelector('.sec-audioLabel');
+    const addUnit = v => v && /^\d+$/.test(v.trim()) ? v.trim()+'px' : v.trim();
     if (img && img.value.trim()) s.image = img.value.trim();
     if (imgCap && imgCap.value.trim()) s.imageCaption = imgCap.value.trim();
-    if (imgW && imgW.value.trim()) s.imageWidth = imgW.value.trim();
-    if (imgH && imgH.value.trim()) s.imageHeight = imgH.value.trim();
+    if (imgW && imgW.value.trim()) s.imageWidth = addUnit(imgW.value);
+    if (imgH && imgH.value.trim()) s.imageHeight = addUnit(imgH.value);
     if (imgAlign && imgAlign.value) s.imageAlign = imgAlign.value;
     if (imgFloat && imgFloat.checked) s.imageFloat = true;
     if (aud && aud.value.trim()) s.audio = aud.value.trim();
