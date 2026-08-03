@@ -760,6 +760,11 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="editorDoImport(event)">
       <input type="file" id="itemImportJsonFile" accept=".json" style="display:none" onchange="itemEdDoImportJson(event)">
     </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px">
+      <label class="eyebrow" style="white-space:nowrap">Verze wiki</label>
+      <input type="text" id="wikiVersionInput" placeholder="např. v1.2 nebo Leden 2025" style="flex:1;max-width:220px">
+      <button onclick="editorSaveVersion()">Uložit verzi</button>
+    </div>
     <div class="filter-bar">
       <input type="text" id="editorSearch" placeholder="Hledat…" oninput="editorFilterAll()">
       <select id="editorCatFilter" onchange="editorFilterAll()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
@@ -832,6 +837,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 <footer style="text-align:center; padding:20px; border-top:1px solid var(--border); color:var(--text-faint); font-size:12px;">
   Encyklopedie Aekildae · Součást projektu
   <a href="https://majla.pythonanywhere.com/" target="_blank" rel="noopener">Vypravěčský deník</a>
+  <span id="wikiVersion" style="margin-left:10px;opacity:0.6"></span>
   <span style="margin-left:12px;cursor:pointer;opacity:0.4;transition:opacity 0.2s" onmouseenter="this.style.opacity='0.8'" onmouseleave="this.style.opacity='0.4'" onclick="editorLogin()">✏️</span>
 </footer>
 
@@ -3201,6 +3207,8 @@ function showPage(page) {
     editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
+    const _vInp = document.getElementById('wikiVersionInput');
+    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || '';
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
@@ -3273,6 +3281,8 @@ function showPageDirect(page) {
     editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
+    const _vInp = document.getElementById('wikiVersionInput');
+    if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || '';
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
@@ -3532,31 +3542,41 @@ document.getElementById('mobileToggle').addEventListener('click', () => {
    COUNTS
    ══════════════════════════════════════════════════════════ */
 const STORAGE_KEY = 'aekildae_items_v1';
-// Inteligentní sloučení: vezmi soubor jako základ, přepiš jen položky které byly editovány
+const DATA_STORAGE_KEY = 'aekildae_data_v1';
+
+// Sloučení ITEMS_DATA (předměty)
 const fileItems = ITEMS_DATA.slice();
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     const lsItems = JSON.parse(saved);
     if (Array.isArray(lsItems) && lsItems.length > 0) {
-      // Pro každou položku ze souboru: pokud existuje v localStorage, použij localStorage verzi
-      // Nové položky ze souboru (chybí v localStorage) se přidají automaticky
       const lsMap = {};
       lsItems.forEach(i => { lsMap[i.id] = i; });
       ITEMS_DATA.length = 0;
-      fileItems.forEach(fi => {
-        ITEMS_DATA.push(lsMap[fi.id] || fi); // LS verze nebo soubor
-      });
-      // Přidej položky z LS které nejsou v souboru (vytvořené přes editor)
-      lsItems.forEach(li => {
-        if (!fileItems.find(fi => fi.id === li.id)) ITEMS_DATA.push(li);
-      });
-      // Aktualizuj LS s novými soubory
+      fileItems.forEach(fi => { ITEMS_DATA.push(lsMap[fi.id] || fi); });
+      lsItems.forEach(li => { if (!fileItems.find(fi => fi.id === li.id)) ITEMS_DATA.push(li); });
       itemsStorageSave();
-      console.log('Předměty sloučeny — soubor: ' + fileItems.length + ', výsledek: ' + ITEMS_DATA.length);
     }
   }
-} catch(e) { console.warn('localStorage chyba:', e); }
+} catch(e) { console.warn('localStorage chyba (items):', e); }
+
+// Sloučení DATA (záznamy — NPC, hráči, lokace...)
+const fileData = DATA.slice();
+try {
+  const savedData = localStorage.getItem(DATA_STORAGE_KEY);
+  if (savedData) {
+    const lsData = JSON.parse(savedData);
+    if (Array.isArray(lsData) && lsData.length > 0) {
+      const lsMap = {};
+      lsData.forEach(i => { lsMap[i.id] = i; });
+      DATA.length = 0;
+      fileData.forEach(fi => { DATA.push(lsMap[fi.id] || fi); });
+      lsData.forEach(li => { if (!fileData.find(fi => fi.id === li.id)) DATA.push(li); });
+      console.log('Záznamy sloučeny z localStorage: ' + DATA.length);
+    }
+  }
+} catch(e) { console.warn('localStorage chyba (data):', e); }
 
 Object.keys(CATEGORY_META).forEach(cat => {
   let count = DATA.filter(d => d.category === cat).length;
@@ -4120,10 +4140,11 @@ function editorSave() {
     DATA.push(entry);
   }
 
+  try { localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(DATA)); } catch(e) {}
   editorCancel();
-  editorFilter();
+  editorFilterAll();
   updateCounts();
-  alert('Záznam uložen. Pro trvalé uložení exportuj DATA (JSON) a nahraj na GitHub.');
+  showToast('✓ Záznam uložen', 'verdigris');
 }
 
 function editorDelete() {
@@ -4131,8 +4152,9 @@ function editorDelete() {
   if (!confirm('Opravdu smazat tento záznam?')) return;
   const idx = DATA.findIndex(d => d.id === editorEditingId);
   if (idx >= 0) DATA.splice(idx, 1);
+  try { localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(DATA)); } catch(e) {}
   editorCancel();
-  editorFilter();
+  editorFilterAll();
   updateCounts();
 }
 
@@ -4481,7 +4503,28 @@ function showToast(msg, type) {
   setTimeout(() => toast.remove(), type === 'blood' ? 6000 : 4000);
 }
 
-function itemsResetToFile() {
+function editorSaveVersion() {
+  const v = document.getElementById('wikiVersionInput').value.trim();
+  if (!v) return;
+  localStorage.setItem('aekildae_version', v);
+  document.getElementById('wikiVersion').textContent = '· ' + v;
+  showToast('✓ Verze uložena: ' + v, 'brass');
+}
+
+// Načti verzi z localStorage
+(function() {
+  const v = localStorage.getItem('aekildae_version');
+  if (v) document.getElementById('wikiVersion').textContent = '· ' + v;
+  // Nastav pole v editoru při jeho otevření
+  const origEditorLogin = window.editorLogin;
+  window.editorLogin = function() {
+    if (origEditorLogin) origEditorLogin();
+    setTimeout(() => {
+      const inp = document.getElementById('wikiVersionInput');
+      if (inp) inp.value = localStorage.getItem('aekildae_version') || '';
+    }, 100);
+  };
+})();
   if (!confirm('Zahodit všechny neuložené změny a načíst původní data ze souboru predmety-data.js?')) return;
   itemsStorageClear();
   location.reload();
