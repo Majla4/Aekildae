@@ -532,7 +532,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
   margin: 14px 0; border-radius: var(--radius); overflow: hidden;
   border: 1px solid var(--border-soft); cursor: zoom-in;
 }
-.section-image img { width: 100%; display: block; max-height: 500px; object-fit: contain; background: var(--bg-panel-2); }
+.section-image img { display: block; object-fit: contain; background: var(--bg-panel-2); }
 .section-image-caption {
   padding: 6px 10px; font-size: 11px; color: var(--text-faint);
   background: var(--bg-panel); text-align: center; font-style: italic;
@@ -3432,16 +3432,19 @@ function renderDetail(item) {
     contentHtml += `<h3>${s.title}</h3><p>${processWikiLinks(s.text)}</p>`;
     if (s.image) {
       const caption = s.imageCaption ? `<div class="section-image-caption">${s.imageCaption}</div>` : '';
-      const w = s.imageWidth || '100%';
-      const h = s.imageHeight ? `max-height:${s.imageHeight};` : 'max-height:500px;';
+      const imgW = s.imageWidth || '100%';
+      const imgH = s.imageHeight || 'auto';
+      const maxH = s.imageHeight ? '' : 'max-height:500px;';
       const align = s.imageAlign || '';
       const float = s.imageFloat;
-      let wrapStyle = `width:${w};`;
+      let wrapStyle = `display:block;`;
+      if (imgW !== '100%') wrapStyle += `max-width:${imgW};`;
       if (float && align === 'left') wrapStyle += 'float:left;margin:0 16px 12px 0;';
       else if (float && align === 'right') wrapStyle += 'float:right;margin:0 0 12px 16px;';
       else if (align === 'center') wrapStyle += 'margin:0 auto;';
       else if (align === 'right') wrapStyle += 'margin-left:auto;';
-      contentHtml += `<div class="section-image" style="${wrapStyle}" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy" style="width:100%;${h}object-fit:contain;">${caption}</div>`;
+      const imgStyle = `width:${imgW};height:${imgH};${maxH}object-fit:contain;`;
+      contentHtml += `<div class="section-image" style="${wrapStyle}" onclick="lightboxOpenUrl('${s.image}')"><img src="${s.image}" alt="${s.imageCaption||s.title}" loading="lazy" style="${imgStyle}">${caption}</div>`;
       if (float) contentHtml += '<div style="clear:both"></div>';
     }
     if (s.audio) {
