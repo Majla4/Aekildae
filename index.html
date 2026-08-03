@@ -3473,23 +3473,32 @@ document.getElementById('mobileToggle').addEventListener('click', () => {
 /* ══════════════════════════════════════════════════════════
    COUNTS
    ══════════════════════════════════════════════════════════ */
-// Inteligentní načtení: vezmi verzi s více položkami (soubor vs localStorage)
-const fileItems = ITEMS_DATA.slice(); // záloha dat ze souboru
-const lsLoaded = itemsStorageLoad();
-if (lsLoaded) {
-  if (ITEMS_DATA.length < fileItems.length) {
-    // Soubor má více předmětů — obnov data ze souboru a aktualizuj localStorage
-    ITEMS_DATA.length = 0;
-    fileItems.forEach(i => ITEMS_DATA.push(i));
-    itemsStorageSave();
-    console.log('Soubor má více předmětů — localStorage aktualizován: ' + ITEMS_DATA.length);
-  } else {
-    console.log('Předměty načteny z localStorage: ' + ITEMS_DATA.length);
+const STORAGE_KEY = 'aekildae_items_v1';
+// Inteligentní sloučení: vezmi soubor jako základ, přepiš jen položky které byly editovány
+const fileItems = ITEMS_DATA.slice();
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    const lsItems = JSON.parse(saved);
+    if (Array.isArray(lsItems) && lsItems.length > 0) {
+      // Pro každou položku ze souboru: pokud existuje v localStorage, použij localStorage verzi
+      // Nové položky ze souboru (chybí v localStorage) se přidají automaticky
+      const lsMap = {};
+      lsItems.forEach(i => { lsMap[i.id] = i; });
+      ITEMS_DATA.length = 0;
+      fileItems.forEach(fi => {
+        ITEMS_DATA.push(lsMap[fi.id] || fi); // LS verze nebo soubor
+      });
+      // Přidej položky z LS které nejsou v souboru (vytvořené přes editor)
+      lsItems.forEach(li => {
+        if (!fileItems.find(fi => fi.id === li.id)) ITEMS_DATA.push(li);
+      });
+      // Aktualizuj LS s novými soubory
+      itemsStorageSave();
+      console.log('Předměty sloučeny — soubor: ' + fileItems.length + ', výsledek: ' + ITEMS_DATA.length);
+    }
   }
-} else {
-  // Žádný localStorage — použij soubor
-  console.log('Předměty načteny ze souboru: ' + ITEMS_DATA.length);
-}
+} catch(e) { console.warn('localStorage chyba:', e); }
 
 Object.keys(CATEGORY_META).forEach(cat => {
   let count = DATA.filter(d => d.category === cat).length;
@@ -4188,8 +4197,6 @@ function itemEdEdit(id) {
   document.getElementById('itemEdForm').style.display = 'block';
   document.getElementById('itemEdForm').scrollIntoView({ behavior: 'smooth' });
 }
-
-const STORAGE_KEY = 'aekildae_items_v1';
 
 function itemsStorageSave() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(ITEMS_DATA)); } catch(e) {}
