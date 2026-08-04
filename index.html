@@ -566,6 +566,21 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
 .pc-photo-thumb.active { border-color: var(--accent-brass); }
 .pc-photo-thumb img { width: 100%; display: block; object-fit: cover; }
 .pc-photo-thumb-label { font-size: 9px; color: var(--text-faint); text-align: center; padding: 2px 2px 3px; }
+/* ── ZÁKONY A LISTINY ── */
+.law-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.law-card { background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px; cursor:pointer; transition:all 0.15s; border-left:3px solid var(--accent-brass-dim); }
+.law-card:hover { border-left-color:var(--accent-brass); box-shadow:0 0 0 1px var(--accent-brass-dim); transform:translateY(-1px); }
+.law-card-type { font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent-brass); font-weight:700; margin-bottom:4px; }
+.law-card-name { font-family:'Cinzel',serif; font-size:15px; font-weight:700; margin-bottom:6px; }
+.law-card-meta { font-size:11px; color:var(--text-faint); margin-bottom:8px; }
+.law-card-excerpt { font-size:12px; color:var(--text-dim); line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.a4-viewer-wrap { background:#555; border-radius:var(--radius); padding:16px; margin:20px 0; }
+.a4-viewer-label { text-align:center; font-size:11px; color:#bbb; margin-bottom:10px; letter-spacing:0.1em; text-transform:uppercase; }
+.a4-viewer { background:#fff; width:100%; position:relative; border-radius:2px; box-shadow:0 4px 24px rgba(0,0,0,0.6); overflow:hidden; height:800px; }
+.a4-viewer iframe { width:100%; height:100%; border:none; display:block; }
+.law-summary h3 { font-family:'Cinzel',serif; font-size:16px; color:var(--accent-brass); margin:20px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--border-soft); }
+.law-summary p { font-size:14px; line-height:1.8; color:var(--text); margin-bottom:12px; }
+
 .fade-in { animation: fadeIn 0.35s ease-out; }
 @keyframes fadeIn {
   0%   { opacity: 0; transform: translateY(8px); }
@@ -624,6 +639,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
     <button class="topbar-link" data-page="lokace">Lokace</button>
     <button class="topbar-link" data-page="frakce">Frakce</button>
     <button class="topbar-link" data-page="casova-osa">Časová osa</button>
+    <button class="topbar-link" data-page="zakony">Zákony</button>
   </nav>
   <button class="topbar-back" id="backBtn" onclick="goBack()">← Zpět</button>
 </header>
@@ -691,6 +707,12 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
         <div class="cat-icon">⏳</div>
         <div class="cat-name">Časová osa</div>
         <div class="cat-desc">Chronologie událostí světa a kampaně</div>
+      </div>
+      <div class="cat-card" style="--cat-accent: #8a6a30" onclick="showPage('zakony')">
+        <div class="cat-icon">📜</div>
+        <div class="cat-name">Zákony a listiny</div>
+        <div class="cat-desc">Výnosy, zákony, smlouvy a historické dokumenty světa</div>
+        <div class="cat-count" id="count-zakony"></div>
       </div>
     </div>
   </div>
@@ -768,6 +790,27 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <aside class="detail-sidebar" id="itemDetailSidebar"></aside>
     </div>
   </div>
+
+  <!-- ──────── ZÁKONY A LISTINY ──────── -->
+  <div class="section-page" id="page-zakony">
+    <div class="section-header"><h2>📜 Zákony a listiny</h2></div>
+    <div class="filter-bar">
+      <input type="text" id="zakonSearch" placeholder="Hledat…" oninput="zakonFilter()">
+      <select id="zakonTypeFilter" onchange="zakonFilter()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
+        <option value="">Všechny typy</option>
+        <option value="Církevní výnos">Církevní výnos</option>
+        <option value="Královský dekret">Královský dekret</option>
+        <option value="Císařský edikt">Císařský edikt</option>
+        <option value="Smlouva">Smlouva</option>
+        <option value="Pirátský kodex">Pirátský kodex</option>
+        <option value="Ostatní">Ostatní</option>
+      </select>
+    </div>
+    <div class="law-grid" id="zakonGrid"></div>
+    <div class="empty-state" id="zakonEmpty" style="display:none"><div class="empty-icon">📜</div>Žádné dokumenty</div>
+  </div>
+
+  <div class="detail-page" id="page-zakon-detail"></div>
 
   <!-- ──────── LIGHTBOX ──────── -->
   <div class="lightbox" id="lightbox" onclick="lightboxClose(event)">
@@ -3249,6 +3292,10 @@ function showPage(page) {
     if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
     backBtn.style.display = 'flex';
+  } else if (page === 'zakony') {
+    zakonInit();
+    document.getElementById('page-zakony').classList.add('active');
+    backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
     itemsInit();
     document.getElementById('page-items-cats').classList.add('active');
@@ -3322,6 +3369,10 @@ function showPageDirect(page) {
     const _vInp = document.getElementById('wikiVersionInput');
     if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
+    backBtn.style.display = 'flex';
+  } else if (page === 'zakony') {
+    zakonInit();
+    document.getElementById('page-zakony').classList.add('active');
     backBtn.style.display = 'flex';
   } else if (page === 'predmety') {
     itemsInit();
@@ -3601,6 +3652,132 @@ document.getElementById('mobileToggle').addEventListener('click', () => {
 });
 
 /* ══════════════════════════════════════════════════════════
+   ZÁKONY A LISTINY
+   ══════════════════════════════════════════════════════════ */
+const ZAKONY_DATA = [
+{
+  id: "cirkevni-vynos",
+  name: "Církevní výnos — Kánonický soubor pravidel",
+  type: "Církevní výnos",
+  icon: "⛪",
+  tags: ["Pentateistická církev", "Karnnelské impérium", "Inkvizice"],
+  issuer: "Arcipontifik Armando-Navaro du Farego de Karnnelville",
+  jurisdiction: "Karnnelské impérium",
+  pdfFile: "dokumenty/cirkevni_zakon.pdf",
+  excerpt: "Výnos první a nejdůležitější Církevní z Kánonického souboru pravidel. Stanovuje základy víry, definuje herezi, zřizuje Inkvizici a Rytířstvo D'hoxarovo a upravuje povinnosti věřících.",
+  summary: [
+    {
+      title: "O čem dokument pojednává",
+      text: "Církevní výnos je základním právním dokumentem Pentateistické církve dobrotivého D'hoxara, sepsaným z pera samotného Arcipontifika Armanda-Navaro du Farego de Karnnelville. Dokument se skládá z osmi paragrafů, které společně tvoří kánonický základ církevního práva platného v celém Karnnelském impériu. Výnos definuje hierarchii církevní moci, zřizuje ozbrojenou složku církve a ukládá povinnosti věřícím i řemeslníkům."
+    },
+    {
+      title: "Klíčová ustanovení",
+      text: "Paragraf 1 stanovuje nadřazenost božského práva (Dius Divinum) nad veškerým světským řádem. Paragraf 2 definuje herezi — za kacíře jsou považovány bytosti ovládající magii (s výjimkou léčitelství a přírodní magie), vyznavači falešných bohů a exkomunikanti. Paragraf 3 zakládá Inkvizitorský řád a definuje jeho hierarchii od Superiora přes Senát, Prokurátory a Komisaře až po Inspektory a Detektivy — sídlem je pevnost Excelsio Deus v Saint Morris Honor. Paragraf 4 zřizuje Rytířstvo D'hoxarovo (Militia D'hoxar) se sídlem v hradě Narris v Karnnelvillu jako ozbrojenou pěst církve. Paragraf 5 zakládá tajný Paladinský řád ochrany Arcipontifika se sídlem ve Fairmontském Paláci. Paragraf 6 stanovuje církevní hierarchii od Arcipontifika přes Pontifiky, Arciepiskopy, Episkopy, Kastlany až po Juheny. Paragraf 8 ukládá věřícím povinný desátek (každý desátý krejcar), pozemkovou daň (každý stý akr) a přednostní vyřízení církevních zakázek řemeslníky."
+    },
+    {
+      title: "Historický a politický význam",
+      text: "Tento výnos je základním kamenem moci Pentateistické církve v Karnnelském impériu. Jeho vydáním Arcipontifik Armando-Navaro — bratr samotného císaře Renaulda-Navaro — výrazně upevnil postavení církve jako druhé největší mocnosti v říši. Zejména §2 o herezi a §3 o Inkvizici jsou pro svět Aekildae klíčové: na jejich základě jsou v celém impériu pronásledováni a upalováni kouzelníci a čarodějové. Výnos tak přímo ovlivňuje osudy hrdinů — kouzelník Darius Sorin by byl v Karnnelvillu kvůli tomuto zákonu pronásledován Inkvizicí."
+    },
+    {
+      title: "Vliv na herní svět",
+      text: "Výnos je živým dokumentem, který hrdinové přímo pocítili. Bratr Remont du Antolon byl součástí Rytířstva D'hoxarova (§4) a jeho sestra Josephin sloužila v klášterním řádu (§7). Inkvizice (§3) uzavřela sanatorium, kde byla uvězněna Josephin. Protimágiové zákony (§2) nutily hrdiny pohybovat se v Karnnelvillu s maximální opatrností. Desátkový systém (§8) obohacuje církev a financuje rozsáhlou síť klášterů, nemocnic a vzdělávacích institucí — ale také Inkvizici a Rytířstvo D'hoxarovo."
+    }
+  ],
+  related: [
+    { id: "arcipontifik-armando", name: "Arcipontifik Armando-Navaro", icon: "⛪" },
+    { id: "inkvizice", name: "Inkvizice", icon: "🔥" },
+    { id: "rytirstvo-dhoxarovo", name: "Rytířstvo D'hoxarovo", icon: "🛡️" },
+    { id: "pentateisticka-cirkev", name: "Pentateistická církev", icon: "⛪" }
+  ]
+}
+];
+
+function zakonInit() {
+  document.getElementById('zakonSearch').value = '';
+  document.getElementById('zakonTypeFilter').value = '';
+  zakonFilter();
+  const el = document.getElementById('count-zakony');
+  if (el) el.textContent = ZAKONY_DATA.length + ' ' + (ZAKONY_DATA.length === 1 ? 'dokument' : 'dokumentů');
+}
+
+function zakonFilter() {
+  const q = (document.getElementById('zakonSearch').value||'').toLowerCase();
+  const type = document.getElementById('zakonTypeFilter').value;
+  let items = ZAKONY_DATA.slice();
+  if (type) items = items.filter(z => z.type === type);
+  if (q) items = items.filter(z => z.name.toLowerCase().includes(q) || z.excerpt.toLowerCase().includes(q));
+  const grid = document.getElementById('zakonGrid');
+  const empty = document.getElementById('zakonEmpty');
+  if (!items.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = items.map(z => `
+    <div class="law-card fade-in" onclick="zakonShowDetail('${z.id}')">
+      <div class="law-card-type">${z.icon} ${z.type}</div>
+      <div class="law-card-name">${z.name}</div>
+      <div class="law-card-meta">Vydavatel: ${z.issuer} · ${z.jurisdiction}</div>
+      <div class="law-card-excerpt">${z.excerpt}</div>
+      <div class="entry-tags" style="margin-top:8px">${(z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function zakonShowDetail(id) {
+  const z = ZAKONY_DATA.find(x => x.id === id);
+  if (!z) return;
+  history.push(currentPage); currentPage = 'zakon-' + id;
+  hideAll();
+  setActiveNav('zakony');
+  document.getElementById('backBtn').style.display = 'flex';
+
+  const related = (z.related||[]).map(r => `
+    <div class="related-item" onclick="showDetail('${r.id}')">
+      <span class="related-icon">${r.icon}</span>
+      <span class="related-name">${r.name}</span>
+    </div>`).join('');
+
+  const summaryHtml = (z.summary||[]).map(s =>
+    `<h3>${s.title}</h3><p>${s.text}</p>`).join('');
+
+  const pdfEmbed = z.pdfFile ? `
+    <div class="a4-viewer-wrap">
+      <div class="a4-viewer-label">📄 Originální dokument</div>
+      <div class="a4-viewer">
+        <iframe src="${z.pdfFile}" title="${z.name}"></iframe>
+      </div>
+    </div>` : '';
+
+  document.getElementById('page-zakon-detail').innerHTML = `
+    <div class="detail-hero" style="position:relative;margin:-28px -24px 28px;padding:60px 40px 40px;background:var(--bg-panel);border-bottom:1px solid var(--border);overflow:hidden">
+      <div style="position:absolute;inset:0;opacity:0.04;background:radial-gradient(ellipse at 30% 50%,var(--accent-brass),transparent 60%)"></div>
+      <p class="eyebrow">${z.type}</p>
+      <h1 style="font-family:Cinzel,serif;font-size:clamp(22px,4vw,34px);color:var(--accent-brass);margin-bottom:10px">${z.icon} ${z.name}</h1>
+      <div style="font-size:13px;color:var(--text-dim);margin-bottom:10px">Vydal: <b>${z.issuer}</b> · Jurisdikce: ${z.jurisdiction}</div>
+      <div class="detail-tags">${(z.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="detail-layout">
+      <div class="detail-content">
+        <p style="font-size:15px;color:var(--text-dim);line-height:1.7;margin-bottom:8px">${z.excerpt}</p>
+        ${pdfEmbed}
+        <div class="law-summary">${summaryHtml}</div>
+      </div>
+      <aside class="detail-sidebar">
+        <div class="info-box">
+          <div class="info-box-header">Informace o dokumentu</div>
+          <div class="info-box-body">
+            <div class="info-row"><span class="info-label">Typ</span><span class="info-value">${z.type}</span></div>
+            <div class="info-row"><span class="info-label">Vydavatel</span><span class="info-value">${z.issuer}</span></div>
+            <div class="info-row"><span class="info-label">Jurisdikce</span><span class="info-value">${z.jurisdiction}</span></div>
+            ${z.pdfFile ? `<div class="info-row"><span class="info-label">Dokument</span><span class="info-value"><a href="${z.pdfFile}" target="_blank" style="color:var(--accent-brass)">Stáhnout PDF</a></span></div>` : ''}
+          </div>
+        </div>
+        ${related ? `<div class="info-box related-box"><div class="info-box-header">Související</div>${related}</div>` : ''}
+      </aside>
+    </div>`;
+
+  document.getElementById('page-zakon-detail').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ══════════════════════════════════════════════════════════
    COUNTS
    ══════════════════════════════════════════════════════════ */
 const STORAGE_KEY = 'aekildae_items_v1';
@@ -3643,6 +3820,8 @@ try {
 Object.keys(CATEGORY_META).forEach(cat => {
   let count = DATA.filter(d => d.category === cat).length;
   if (cat === 'predmety' && typeof ITEMS_DATA !== 'undefined') count = ITEMS_DATA.length;
+  if (cat === 'zakony') count = ZAKONY_DATA.length;
+    if (cat === 'zakony') count = ZAKONY_DATA.length;
   const el = document.getElementById(`count-${cat}`);
   if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
 });
@@ -4311,6 +4490,7 @@ function updateCounts() {
   Object.keys(CATEGORY_META).forEach(cat => {
     let count = DATA.filter(d => d.category === cat).length;
     if (cat === 'predmety' && typeof ITEMS_DATA !== 'undefined') count = ITEMS_DATA.length;
+    if (cat === 'zakony') count = ZAKONY_DATA.length;
     const el = document.getElementById(`count-${cat}`);
     if (el) el.textContent = `${count} ${count === 1 ? CATEGORY_META[cat].singular : 'záznamů'}`;
   });
