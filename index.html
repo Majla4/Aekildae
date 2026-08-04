@@ -826,6 +826,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
       <button class="primary" onclick="editorNew()">+ Nový záznam</button>
       <button class="primary" onclick="itemEdNew()">+ Nový předmět</button>
+      <button class="primary" onclick="zakonEdNew()" style="background:rgba(139,106,48,0.4);border-color:#8a6a30">+ Nový zákon</button>
       <button onclick="editorExport()">⬇ Export záznamy</button>
       <button onclick="itemEdExport()">⬇ Export předměty → JSON</button>
       <button onclick="editorImport()">⬆ Import záznamy</button>
@@ -849,6 +850,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
         <option value="hraci">⚔️ Hráčské postavy</option>
         <option value="lokace">🏰 Lokace</option>
         <option value="frakce">🏛️ Frakce</option>
+        <option value="__zakony__">📜 Zákony a listiny</option>
       </select>
     </div>
     <div id="editorList" style="margin-top:14px"></div>
@@ -902,6 +904,45 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <div style="margin-bottom:12px"><label class="eyebrow">Související ID (čárkou)</label><input type="text" id="ie-related"></div>
       <div style="margin-top:20px;display:flex;gap:10px"><button class="primary" onclick="itemEdSave()">💾 Uložit</button><button onclick="itemEdCancel()">Zrušit</button><button id="ie-delete-btn" onclick="itemEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button></div>
     </div>
+
+    <!-- LAW EDIT FORM -->
+    <div id="zakonEdForm" style="display:none;margin-top:20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+      <h3 style="color:var(--accent-brass);margin-bottom:14px" id="zakonEdFormTitle">Nový zákon / listina</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">ID (unikátní)</label><input type="text" id="ze-id" placeholder="cirkevni-vynos"></div>
+        <div><label class="eyebrow">Název dokumentu</label><input type="text" id="ze-name" placeholder="Církevní výnos…"></div>
+        <div><label class="eyebrow">Typ dokumentu</label>
+          <select id="ze-type" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%">
+            <option>Církevní výnos</option><option>Královský dekret</option><option>Císařský edikt</option>
+            <option>Smlouva</option><option>Pirátský kodex</option><option>Ostatní</option>
+          </select>
+        </div>
+        <div><label class="eyebrow">Ikona</label><input type="text" id="ze-icon" placeholder="📜" style="font-size:20px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="eyebrow">Vydavatel</label><input type="text" id="ze-issuer" placeholder="Arcipontifik…"></div>
+        <div><label class="eyebrow">Jurisdikce</label><input type="text" id="ze-jurisdiction" placeholder="Karnnelské impérium"></div>
+      </div>
+      <div style="margin-bottom:10px"><label class="eyebrow">Tagy (čárkou)</label><input type="text" id="ze-tags" placeholder="Inkvizice, Církev"></div>
+      <div style="margin-bottom:10px"><label class="eyebrow">Stručný popis</label><textarea id="ze-excerpt" rows="2" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%;resize:vertical"></textarea></div>
+      <div style="margin-bottom:16px">
+        <label class="eyebrow">PDF soubor (cesta)</label>
+        <input type="text" id="ze-pdf" placeholder="dokumenty/nazev.pdf">
+        <div style="font-size:11px;color:var(--text-faint);margin-top:4px">Nahraj PDF do složky <code style="background:var(--bg-panel-2);padding:1px 4px;border-radius:3px">dokumenty/</code> na GitHubu a zadej cestu, např. <code style="background:var(--bg-panel-2);padding:1px 4px;border-radius:3px">dokumenty/cirkevni_zakon.pdf</code></div>
+      </div>
+      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Shrnutí dokumentu (sekce)</h4>
+      <div id="ze-sections"></div>
+      <button onclick="zakonEdAddSection()" style="margin-top:8px;font-size:12px">+ Přidat sekci shrnutí</button>
+      <h4 style="color:var(--accent-brass);margin:16px 0 8px">Související záznamy</h4>
+      <div id="ze-related"></div>
+      <button onclick="zakonEdAddRelated()" style="margin-top:8px;font-size:12px">+ Přidat odkaz</button>
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="primary" onclick="zakonEdSave()">💾 Uložit</button>
+        <button onclick="zakonEdCancel()">Zrušit</button>
+        <button id="ze-delete-btn" onclick="zakonEdDelete()" style="margin-left:auto;color:var(--accent-blood);border-color:var(--accent-blood-dim);display:none">🗑 Smazat</button>
+      </div>
+    </div>
+
   </div>
 
 </main>
@@ -3288,6 +3329,7 @@ function showPage(page) {
     editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
+    document.getElementById('zakonEdForm').style.display = 'none';
     const _vInp = document.getElementById('wikiVersionInput');
     if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
@@ -3366,6 +3408,7 @@ function showPageDirect(page) {
     editorFilterAll();
     document.getElementById('editorForm').style.display = 'none';
     document.getElementById('itemEdForm').style.display = 'none';
+    document.getElementById('zakonEdForm').style.display = 'none';
     const _vInp = document.getElementById('wikiVersionInput');
     if (_vInp) _vInp.value = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
     document.getElementById('page-editor').classList.add('active');
@@ -3632,6 +3675,144 @@ searchInput.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.topbar-search')) closeSearch();
 });
+
+/* ══════════════════════════════════════════════════════════
+   EDITOR — ZÁKONY
+   ══════════════════════════════════════════════════════════ */
+const ZAKONY_STORAGE_KEY = 'aekildae_zakony_v1';
+let zakonEdEditingId = null;
+
+// Načti zákony z localStorage
+(function() {
+  try {
+    const saved = localStorage.getItem(ZAKONY_STORAGE_KEY);
+    if (!saved) return;
+    const ls = JSON.parse(saved);
+    if (!Array.isArray(ls)) return;
+    const lsMap = {}; ls.forEach(z => { lsMap[z.id] = z; });
+    for (let i = 0; i < ZAKONY_DATA.length; i++) {
+      if (lsMap[ZAKONY_DATA[i].id]) ZAKONY_DATA[i] = lsMap[ZAKONY_DATA[i].id];
+    }
+    ls.forEach(z => { if (!ZAKONY_DATA.find(x => x.id === z.id)) ZAKONY_DATA.push(z); });
+  } catch(e) {}
+})();
+
+function zakonEdSaveLS() {
+  try { localStorage.setItem(ZAKONY_STORAGE_KEY, JSON.stringify(ZAKONY_DATA)); } catch(e) {}
+}
+
+function zakonEdNew() {
+  zakonEdEditingId = null;
+  document.getElementById('zakonEdFormTitle').textContent = 'Nový zákon / listina';
+  document.getElementById('ze-delete-btn').style.display = 'none';
+  ['ze-id','ze-name','ze-icon','ze-issuer','ze-jurisdiction','ze-tags','ze-excerpt','ze-pdf'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ze-type').value = 'Ostatní';
+  document.getElementById('ze-sections').innerHTML = '';
+  document.getElementById('ze-related').innerHTML = '';
+  zakonEdAddSection();
+  document.getElementById('zakonEdForm').style.display = 'block';
+  document.getElementById('zakonEdForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function zakonEdEdit(id) {
+  const z = ZAKONY_DATA.find(x => x.id === id);
+  if (!z) return;
+  zakonEdEditingId = id;
+  document.getElementById('zakonEdFormTitle').textContent = 'Upravit: ' + z.name;
+  document.getElementById('ze-delete-btn').style.display = 'block';
+  document.getElementById('ze-id').value = z.id;
+  document.getElementById('ze-name').value = z.name;
+  document.getElementById('ze-type').value = z.type || 'Ostatní';
+  document.getElementById('ze-icon').value = z.icon || '';
+  document.getElementById('ze-issuer').value = z.issuer || '';
+  document.getElementById('ze-jurisdiction').value = z.jurisdiction || '';
+  document.getElementById('ze-tags').value = (z.tags||[]).join(', ');
+  document.getElementById('ze-excerpt').value = z.excerpt || '';
+  document.getElementById('ze-pdf').value = z.pdfFile || '';
+  document.getElementById('ze-sections').innerHTML = '';
+  (z.summary||[]).forEach(s => zakonEdAddSection(s.title, s.text));
+  if (!(z.summary||[]).length) zakonEdAddSection();
+  document.getElementById('ze-related').innerHTML = '';
+  (z.related||[]).forEach(r => zakonEdAddRelated(r.id, r.name, r.icon));
+  document.getElementById('zakonEdForm').style.display = 'block';
+  document.getElementById('zakonEdForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function zakonEdAddSection(title, text) {
+  const el = document.getElementById('ze-sections');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:200px 1fr auto;gap:8px;margin-bottom:6px;align-items:start';
+  div.innerHTML = `
+    <input type="text" placeholder="Nadpis sekce" value="${(title||'').replace(/"/g,'&quot;')}">
+    <textarea rows="3" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px;resize:vertical" placeholder="Text sekce…">${text||''}</textarea>
+    <button onclick="this.parentElement.remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>`;
+  el.appendChild(div);
+}
+
+function zakonEdAddRelated(id, name, icon) {
+  const el = document.getElementById('ze-related');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 60px auto;gap:8px;margin-bottom:4px';
+  div.innerHTML = `
+    <input type="text" placeholder="ID záznamu" value="${id||''}">
+    <input type="text" placeholder="Zobrazený název" value="${(name||'').replace(/"/g,'&quot;')}">
+    <input type="text" placeholder="Ikona" value="${icon||''}" style="font-size:16px">
+    <button onclick="this.parentElement.remove()" style="padding:4px 8px;font-size:11px;color:var(--accent-blood)">✕</button>`;
+  el.appendChild(div);
+}
+
+function zakonEdSave() {
+  const name = document.getElementById('ze-name').value.trim();
+  if (!name) { alert('Název je povinný.'); return; }
+  let id = document.getElementById('ze-id').value.trim();
+  if (!id) id = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const summary = [...document.getElementById('ze-sections').children].map(div => {
+    const inputs = div.querySelectorAll('input,textarea');
+    return { title: inputs[0].value, text: inputs[1].value };
+  }).filter(s => s.title || s.text);
+  const related = [...document.getElementById('ze-related').children].map(div => {
+    const inputs = div.querySelectorAll('input');
+    return { id: inputs[0].value, name: inputs[1].value, icon: inputs[2].value||'📄' };
+  }).filter(r => r.id);
+  const entry = {
+    id, name,
+    type: document.getElementById('ze-type').value,
+    icon: document.getElementById('ze-icon').value.trim() || '📜',
+    issuer: document.getElementById('ze-issuer').value.trim(),
+    jurisdiction: document.getElementById('ze-jurisdiction').value.trim(),
+    tags: document.getElementById('ze-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    excerpt: document.getElementById('ze-excerpt').value.trim(),
+    pdfFile: document.getElementById('ze-pdf').value.trim(),
+    summary, related
+  };
+  if (zakonEdEditingId) {
+    const idx = ZAKONY_DATA.findIndex(z => z.id === zakonEdEditingId);
+    if (idx >= 0) ZAKONY_DATA[idx] = entry;
+  } else {
+    if (ZAKONY_DATA.find(z => z.id === id)) { alert('Zákon s tímto ID již existuje.'); return; }
+    ZAKONY_DATA.push(entry);
+  }
+  zakonEdSaveLS();
+  zakonEdCancel();
+  editorFilterAll();
+  updateCounts();
+  showToast('✓ Zákon uložen', 'verdigris');
+}
+
+function zakonEdDelete() {
+  if (!zakonEdEditingId || !confirm('Opravdu smazat?')) return;
+  const idx = ZAKONY_DATA.findIndex(z => z.id === zakonEdEditingId);
+  if (idx >= 0) ZAKONY_DATA.splice(idx, 1);
+  zakonEdSaveLS();
+  zakonEdCancel();
+  editorFilterAll();
+  updateCounts();
+}
+
+function zakonEdCancel() {
+  document.getElementById('zakonEdForm').style.display = 'none';
+  zakonEdEditingId = null;
+}
 
 function closeSearch() {
   searchDropdown.classList.remove('visible');
@@ -4188,8 +4369,8 @@ function editorFilterAll() {
   const list = document.getElementById('editorList');
   let html = '';
 
-  // DATA entries (unless filtering items only)
-  if (cat !== '__items__') {
+  // DATA entries
+  if (cat !== '__items__' && cat !== '__zakony__') {
     let dataItems = DATA.slice();
     if (cat) dataItems = dataItems.filter(d => d.category === cat);
     if (q) dataItems = dataItems.filter(d => d.name.toLowerCase().includes(q) || d.id.includes(q));
@@ -4201,11 +4382,10 @@ function editorFilterAll() {
           <div style="font-size:11px;color:var(--text-faint)">${CATEGORY_META[item.category]?.title || item.category}</div>
         </div>
         <span class="tag" style="font-size:10px">záznam</span>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
-  // ITEMS_DATA entries (unless filtering non-items)
+  // ITEMS_DATA
   if (!cat || cat === '__items__') {
     let items = ITEMS_DATA.slice();
     if (q) items = items.filter(i => i.name.toLowerCase().includes(q) || i.id.includes(q));
@@ -4220,6 +4400,21 @@ function editorFilterAll() {
         <span class="tag tag-brass" style="font-size:10px">předmět</span>
       </div>`;
     }).join('');
+  }
+
+  // ZAKONY_DATA
+  if (!cat || cat === '__zakony__') {
+    let zakony = ZAKONY_DATA.slice();
+    if (q) zakony = zakony.filter(z => z.name.toLowerCase().includes(q) || z.id.includes(q));
+    html += zakony.map(z => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="zakonEdEdit('${z.id}')">
+        <span style="font-size:20px;width:28px;text-align:center">${z.icon||'📜'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:13px">${z.name}</div>
+          <div style="font-size:11px;color:var(--text-faint)">${z.type} · ${z.jurisdiction}</div>
+        </div>
+        <span class="tag" style="font-size:10px;border-color:#8a6a30;color:#c99a44">zákon</span>
+      </div>`).join('');
   }
 
   list.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-faint)">Žádné výsledky</div>';
