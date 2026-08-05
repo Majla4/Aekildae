@@ -799,6 +799,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
       <select id="zakonTypeFilter" onchange="zakonFilter()" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px">
         <option value="">Všechny typy</option>
         <option value="Církevní výnos">Církevní výnos</option>
+        <option value="Posvátný text">Posvátný text</option>
         <option value="Královský dekret">Královský dekret</option>
         <option value="Císařský edikt">Císařský edikt</option>
         <option value="Smlouva">Smlouva</option>
@@ -913,7 +914,7 @@ input:focus { outline: 2px solid var(--accent-brass); outline-offset: -1px; bord
         <div><label class="eyebrow">Název dokumentu</label><input type="text" id="ze-name" placeholder="Církevní výnos…"></div>
         <div><label class="eyebrow">Typ dokumentu</label>
           <select id="ze-type" style="font-family:Inter,sans-serif;font-size:13px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;width:100%">
-            <option>Církevní výnos</option><option>Královský dekret</option><option>Císařský edikt</option>
+            <option>Církevní výnos</option><option>Posvátný text</option><option>Královský dekret</option><option>Císařský edikt</option>
             <option>Smlouva</option><option>Pirátský kodex</option><option>Ostatní</option>
           </select>
         </div>
@@ -983,7 +984,7 @@ var ITEM_CATEGORIES = {
 </script>
 <script src="predmety-data.js"></script>
 <script>
-const WIKI_VERSION_DEFAULT = 'v2.2';
+const WIKI_VERSION_DEFAULT = 'v2.3';
 (function() {
   const v = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
   const el = document.getElementById('wikiVersion');
@@ -1192,7 +1193,8 @@ const DATA = [
     related: [
       { id: "renauld-navaro", name: "Císař Renauld-Navaro", icon: "🏛️" },
       { id: "roderick-hampton", name: "Komtur Hampton", icon: "🛡️" },
-      { id: "cirkevni-vynos", name: "Církevní výnos", icon: "📜" }
+      { id: "cirkevni-vynos", name: "Církevní výnos", icon: "📜" },
+      { id: "pismo-svate", name: "Písmo Svaté", icon: "📖" }
     ]
   }
 },
@@ -1334,7 +1336,7 @@ const DATA = [
   excerpt: "Prastarý černokněžník pohřbený před staletími tajemným řádem. Po svém vzkříšení se ukrývá a po celém světě se šíří nemrtví.",
   detail: {
     sections: [
-      { title: "Starý deník", text: "Pokud jsou zápisky ve starém deníku, který dobrodruzi nalezli v jeskyních na východě ostrova Pancha, pravdivé, jedná se o černokněžníka pohřbeného asi okolo roku 315 nějakým starým kouzelnickým řádem spojeným s Poegnnamaganci — oddílem bojovníků ze Sférických válek." },
+      { title: "Starý deník a Poegnnamagna", text: "Pokud jsou zápisky ve starém deníku, který dobrodruzi nalezli v jeskyních na východě ostrova Pancha, pravdivé, jedná se o černokněžníka pohřbeného asi okolo roku 315 kouzelnickým řádem Poegnnamagna. Dle Písma Svatého (Contactus §6.10) byl Poegnnamagna řád 'božím vojákům podobající se, však krutě nespravedlivý a nečestný' — tedy heretic vojenský řád kouzelníků z prokletých měst, nikoli bohabojní bojovníci! Motivy k pohřbení nekromanta tak mohou být zcela jiné než dobré úmysly — možná rivalita, krádež moci, nebo snaha eliminovat konkurenci." },
       { title: "Vzkříšení", text: "Místo pro hrobku mu vybrali na odlehlém ostrově vzdáleného souostroví Mancha Vancha. Skupina trosečníků o mnoho století později jeho ostatky exhumovala a převezla do starobylých trosek elfského chrámu na ostrově Is Ym v souostroví Ækildae, kde samovolně došlo ke vzkříšení starého nekromanta." },
       { title: "Současná hrozba", text: "Od dob vzkříšení dochází na celém světě k záhadným výskytům nemrtvých — například vyplenění muzea kostlivci v Port Hancock v Ækildai. O činech a životě nekromanta naše skupina dobrodruhů zatím nic nezjistila. Ani o záhadném kouzelnickém řádu anebo o bojovnících, kteří byli pověřeni jeho pohřbením." }
     ],
@@ -1351,7 +1353,8 @@ const DATA = [
     },
     related: [
       { id: "khorshed", name: "Kapitán Khorshed", icon: "⚓" },
-      { id: "aratornita", name: "Kněžka Aratornita", icon: "✨" }
+      { id: "aratornita", name: "Kněžka Aratornita", icon: "✨" },
+      { id: "pismo-svate", name: "Písmo Svaté (Poegnnamagna)", icon: "📖" }
     ]
   }
 },
@@ -2676,7 +2679,8 @@ const DATA = [
       { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" },
       { id: "bred", name: "Bred", icon: "🛡️" },
       { id: "pentateisticka-cirkev", name: "Církev D'hoxara", icon: "⛪" },
-      { id: "cirkevni-vynos", name: "Církevní výnos (§4)", icon: "📜" }
+      { id: "cirkevni-vynos", name: "Církevní výnos (§4)", icon: "📜" },
+      { id: "pismo-svate", name: "Písmo Svaté (kouzla)", icon: "📖" }
     ]
   }
 },
@@ -2819,7 +2823,8 @@ const DATA = [
     related: [
       { id: "pentateisticka-cirkev", name: "Církev D'hoxara", icon: "⛪" },
       { id: "inkvizice", name: "Inkvizice", icon: "🔥" },
-      { id: "brilanta", name: "Brilanta", icon: "🔮" }
+      { id: "brilanta", name: "Brilanta", icon: "🔮" },
+      { id: "pismo-svate", name: "Písmo Svaté (teol. základ)", icon: "📖" }
     ]
   }
 },
@@ -2890,7 +2895,7 @@ const DATA = [
       { title: "Proroctví Marinahael", text: "Stařičká elfská kněžka na ostrově Sentrink Lungsat v Hilaperllas hovořila o starém proroctví, které mělo předpovědět příchod skupiny hrdinů, až bude ostrovům nejhůř, kteří nastolí lepší časy — ale pouze na krátko, neboť zlo nikdy nespí a je připraveno využít každé příležitosti. Na přesné znění si již nevzpomněla." },
       { title: "Proroctví obřadní lebky", text: "Obřadní lebka v Brilantině srubu pronesla záhadné verše: Nepřítele podoba v okovech se zmítá, druhem svorným může být hned zítra. Sluha nepřítele, otrok i bojovník bývalý, krev svou předci jeho jménem Boha prolévali. Prastaré zlo zase se probouzí, spojenectví nové v boji s ním poslouží. Bídák hanebný ve zbroji tepané k válce a ničení znovu zas povstane.", image: "img/obradni_lebka.png", imageCaption: "Obřadní lebka v Brilantině srubu", audio: "audio/prorocstvi_lebky.mp3", audioLabel: "🔊 Proroctví obřadní lebky" },
       { title: "Vidění sestry Josephin", text: "Josephin Emelin du Antolon, řádová sestra z kláštera Balmard, měla věštecké vize skládající se ze strašlivých výjevů plných smrti, chodících mrtvých a krve. Později viděla svého bratra Remonta bojovat s nemrtvými v dalekých cizích zemích oděného v rodových barvách — proto mu řekla, aby se připojil k hrdinům a naplnil svůj osud." },
-      { title: "Naplňování proroctví", text: "Některé části proroctví se již naplnily. Orgoth — tvor zuřivý a zraněný — nalezl pomoc u hrdinů. Remont du Antolon — sluha nepřítele, jehož předci prolévali krev jménem Boha — opustil řád a připojil se ke skupině. Prastaré zlo (nekromant X) se skutečně probouzí. Otázkou zůstává, kdo je bídák hanebný ve zbroji tepané." }
+      { title: "Naplňování proroctví", text: "Některé části proroctví se již naplnily. Orgoth — tvor zuřivý a zraněný — nalezl pomoc u hrdinů. Remont du Antolon — sluha nepřítele, jehož předci prolévali krev jménem Boha — opustil řád a připojil se ke skupině. Prastaré zlo (nekromant X) se skutečně probouzí. Otázkou zůstává, kdo je bídák hanebný ve zbroji tepané. Pozoruhodná je také shoda s Apparitio Shardovo (Písmo Svaté, kap. 99) — apokalyptické vidění bojovníka Sharda popisuje přesně tentýž scénář: armády nemrtvých, démoni vystupující ze země a 'nevelká skupina oddaných bojovníků z poměrů různých, urození i prostí, silní i moudří', kteří procházejí světem a bojují s mrtvými. Shard viděl i příchod démonického hejtmana s pěti rohy a korunami padlých králů." }
     ],
     infoBox: {
       title: "Proroctví",
@@ -2905,7 +2910,8 @@ const DATA = [
       { id: "aratornita", name: "Kněžka Aratornita", icon: "✨" },
       { id: "brilanta", name: "Brilanta", icon: "🔮" },
       { id: "marinahael", name: "Marinahael", icon: "🧝‍♀️" },
-      { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" }
+      { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" },
+      { id: "pismo-svate", name: "Písmo Svaté (kap. 99)", icon: "📖" }
     ]
   }
 },
@@ -2915,7 +2921,7 @@ const DATA = [
   excerpt: "Svět Aekildae zná mnoho forem víry — od mocné Pentateistické církve D'hoxara přes přírodní mořská božstva po prastarou druidskou tradici.",
   detail: {
     sections: [
-      { title: "Pentateistická církev D'hoxara", text: "Dominantní náboženství Karnnelského impéria. Uctívá dobrotivého D'hoxara a jeho svaté sourozence. Víra vychází ze společného základu se zbytkem světa, ale karnnelská odnož se vyvinula ve fanatismus. Disponuje rozsáhlou Inkvizicí a vojenským Rytířstvem D'hoxarovým. Nejvyšším duchovním je Arcipontifik, volený na konkláve v Saint Morris Honor." },
+      { title: "Pentateistická církev D'hoxara", text: "Dominantní náboženství Karnnelského impéria, jehož teologickým základem je Písmo Svaté sepsané Arciepiskopem Sabinatiem de Viernese. Uctívá pět bohů: D'hoxara (dar myšlení), Q'ubixe (Vesmírný řemeslník, stvořil Zemi), B'raxisoylex (Vesmírná pečovatelka, stvořila život), I'xasima (stvořil lidi) a zavrhnutého M'yxinarixina (bůh zla a démonů). Číslo pět je pro věřící posvátné. Věřící usilují o vstup do T'ear M'aenaelenu (božský domov) vyhýbáním se T'ear Teaxósu (peklo M'yxinarixinovo). Karnnelská odnož se vyvinula ve fanatismus — zvláště vůči magii, kterou Písmo Svaté explicitně odsuzuje. Disponuje Inkvizicí, Rytířstvem D'hoxarovým a tajným Paladinským řádem. Sídlem je Saint Morris Honor, pojmenované po Morrisovi — legendárním vůdci věřících z Písma Svatého." },
       { title: "Přírodní a mořská božstva", text: "Elfská kněžka Marinahael na ostrově Sentrink Lungsat vyznává přírodní mořská božstva. Její víra jí umožňuje uklidňovat bouře a léčit. Na ostrovech Hilaperllas mají tato starší božstva stále své vyznavače. Druidská tradice v lesích Angelwoodu ctí přírodu a její cykly — druidka Melisa ovládá Kruh bylin." },
       { title: "Prastaré síly", text: "Kněžka Aratornita na ostrově Pansomin střeží svět proti průniku temných sil, jak k tomu došlo po Velké Konjunkci před Astrální válkou. Její víra a moc sahají do dob před současným letopočtem. Brilanta v mokřadech u Marisiru vyznává vlastní tradici — její obřadní lebka slouží jako médium pro přenos poselství a proroctví." },
       { title: "Řád Milostivé B'raxisoylex", text: "Ženský klášterní řád pečující v klášteře Balmard v Karnnelvillu. Sestra Josephin du Antolon z tohoto řádu měla věštecké vize a její modlitby spolu se sestrami dokázaly zadržet přízračné běsy a zabránit zkáze celého města." },
@@ -3832,7 +3838,7 @@ const ZAKONY_DATA = [
   tags: ["Pentateistická církev", "Karnnelské impérium", "Inkvizice"],
   issuer: "Arcipontifik Armando-Navaro du Farego de Karnnelville",
   jurisdiction: "Karnnelské impérium",
-  pdfFile: "dokumenty/cirkevni_zakon.pdf",
+  pdfFile: "dokumenty/církevní zákon.pdf",
   excerpt: "Výnos první a nejdůležitější Církevní z Kánonického souboru pravidel. Stanovuje základy víry, definuje herezi, zřizuje Inkvizici a Rytířstvo D'hoxarovo a upravuje povinnosti věřících.",
   summary: [
     {
@@ -3857,6 +3863,58 @@ const ZAKONY_DATA = [
     { id: "inkvizice", name: "Inkvizice", icon: "🔥" },
     { id: "rytirstvo-dhoxarovo", name: "Rytířstvo D'hoxarovo", icon: "🛡️" },
     { id: "pentateisticka-cirkev", name: "Pentateistická církev", icon: "⛪" }
+  ]
+}
+,
+{
+  id: "pismo-svate",
+  name: "Písmo Svaté — Kánonický text víry",
+  type: "Posvátný text",
+  icon: "📖",
+  tags: ["Pentateistická církev", "D'hoxar", "teologie", "M'yxinarixin"],
+  issuer: "Arciepiskop Sabinarius de Viernese",
+  jurisdiction: "Celý známý svět — věřící D'hoxarovi",
+  pdfFile: "dokumenty/Písmo Svaté.docx",
+  excerpt: "Posvátný kánon víry D'hoxarovy církve. Popisuje stvoření světa, pád M'yxinarixina, příběhy věrných, apokalyptické proroctví a modlitby. Obsahuje také officiální seznam kouzel dostupných klerikům a chrámovým rytířům.",
+  summary: [
+    {
+      title: "Struktura a obsah",
+      text: "Písmo Svaté se skládá ze sedmi hlavních částí. Emersionis (kap. 1) líčí stvoření světa a bohů — D'hoxar jako první bytost, poté Q'ubix (Vesmírný řemeslník), B'raxisoylex (Vesmírná pečovatelka), I'xasim a M'yxinarixin. Conflictio (kap. 2) popisuje pád M'yxinarixina, jeho žárlivost na lidstvo, vznik T'ear Teaxósu (říše démonu) a korupci duší. Damnatio (kap. 4) líčí zklamání bohů z lidstva a jejich ústup do T'ear M'aenaelenu. Contactus (kap. 6) vykresluje herezi — čaroděje a jejich města. Bellum (kap. 9) je válka bohů a jejich věrných proti M'yxinarixinovým démonům. Narrationum Morrisovo (kap. 21) je příběh Morrise — vůdce lidu — od úpadku přes pouštní exodus až po founded sídla Božích věrných. Apparitio Shardovo (kap. 99) je apokalyptické proroctví ukazující konec světa a spasení věrných. Orondo libri obsahuje modlitby a Azyl je sbírkou kouzel věrných."
+    },
+    {
+      title: "Teologie — bohové a jejich role",
+      text: "Dle Písma Svatého existuje pět bohů. D'hoxar — nejstarší, dal lidem dar myšlení (Cogito ergo sum). Q'ubix — Vesmírný řemeslník, stvořil Zemi. B'raxisoylex — Vesmírná pečovatelka, stvořila přírodu a život. I'xasim — stvořil lidi. M'yxinarixin — nejmladší, ze závisti na lidstvo vymyslel závist, hněv a zlo, byl vyhnán a stvořil T'ear Teaxós (peklo). Čtveřice Nejsvětější (bez M'yxinarixina) sídlí v T'ear M'aenaelenu (ráj). Číslo pět je posvátné — 'pět jest číslem božským'. Modlitby jsou adresovány jmenovitě všem čtyřem bohům."
+    },
+    {
+      title: "Poegnnamagna — klíčová spojitost s kampaní",
+      text: "Contactus §6.10 zmiňuje 'řád Poegnnamagna, řád božím vojákům podobající se, však krutě nespravedlivý a nečestný' — heretic bojový řád působící ve městech kouzelníků Gemdylon, Adamea a Semoba. Toto je klíčová spojitost s kampaní: Poegnnamaganci jsou totiž přesně ti, kdo pohřbili Nekromanta X okolo roku 315! Původně tedy šlo o kacířský vojenský řád kouzelníků, nikoli o věrné boží bojovníky. Jejich motiv k pohřbení nekromanta tak může být zcela jiný, než se zdálo — možná rivalita mocí, nikoli bohabojnost."
+    },
+    {
+      title: "Morris a Saint Morris Honor",
+      text: "Kap. 21 vypráví příběh Morrise, syna Morrise, vojáka D'hoxarova, který vedl tisíce věrných z devastované země skrze pouštní planiny a mokřady až k pobřeží, kde nařídil postavit opevnění a město — 'město mého jména na památku mou vystavte.' Toto je zřejmě zakladatelský příběh Saint Morris Honor — sídla Arcipontifika a pevnosti Inkvizice Excelsio Deus. Morris je tak uctívanou historickou postavou církve, téměř světcem."
+    },
+    {
+      title: "Apparitio Shardovo — proroctví a kampaň",
+      text: "Kap. 99 obsahuje apokalyptické vidění bojovníka Sharda, které mu zjevil D'hoxar osobně. Vidění ukazuje: mrtvé pochodující po živých, démony vystupující ze země, vzduch a vody zamořené jedem, vše živé hynou — a uprostřed zkázy 'nevelká skupina oddaných bojovníků z poměrů různých, urození i prostí, silní i moudří' kteří procházejí světem z Boží vůle a vedou nesčetné bitvy s mrtvými. Nakonec se zjeví démon nade všechny — ocelová kůže, pět rohů s korunami padlých králů, netopýří křídla. Toto proroctví nápadně rezonuje s aktuálním stavem světa: vzkříšení Nekromanta X a šíření nemrtvých. Skupina hrdinů by mohla být onou 'skupinou z poměrů různých'."
+    },
+    {
+      title: "Posvátná kouzla církve",
+      text: "Závěrečná část Písma Svatého — Azyl — obsahuje sbírku officiálních kouzel dostupných věrným božím: Azyl (1. stupeň, vymítání — ochrana tvora před útokem), Léčivé slovo (1. stupeň, zaklínání — obnova výdrže na dálku), Požehnání (1. stupeň, očarování — bonus k útokům a záchranám), Štít víry (1. stupeň, vymítání — +2 OČ), Zhoj zranění (1. stupeň, zaklínání — obnova výdrže dotykem), Důstojný odpočinek (2. stupeň, nekromancie rituál — ochrana mrtvoly před rozkladem a animací), Léčivá modlitba (2. stupeň, zaklínání — masové léčení), Podpora (2. stupeň, vymítání — zvýšení max. výdrže), Uklidni emoce (2. stupeň, zaklínání — potlačení nepřátelství), Denní světlo (3. stupeň, zaklínání — silné světlo), Hromadné léčivé slovo (3. stupeň — léčení skupiny), Sejmi Kletbu (3. stupeň, vymítání) a Znamení proti smrti (4. stupeň, vymítání — ochrana před smrtelným zásahem). Dostupná pro: Klerik, Paladin, Chrámový rytíř (Militia D'hoxar), Bard, Druid a Hraničář u vybraných."
+    },
+    {
+      title: "Hereze a magie v Písmu",
+      text: "Písmo Svaté je teologickým základem pro §2 Církevního výnosu, který definuje herezi. Contactus explicitně popisuje kouzelníky jako nepřátele bohů — ovládají 'pohanskou magii', mrzačí přírodní zákonitosti, staví si chrámy a staví se na roveň bohům. Jejich města Gemdylon, Adamea a Semoba jsou popsána jako místa násilí a zvrácenosti. §2 výnosu tedy není svévolný fanatismus, ale přímý teologický výklad Písma Svatého. Morris v kap. 21 osobně vedl útok na BanArd — město zaříkávačů — a každého, kdo odmítl zříci se magie, dal setnout."
+    }
+  ],
+  related: [
+    { id: "pentateisticka-cirkev", name: "Pentateistická církev", icon: "⛪" },
+    { id: "arcipontifik-armando", name: "Arcipontifik Armando", icon: "⛪" },
+    { id: "cirkevni-vynos", name: "Církevní výnos", icon: "📜" },
+    { id: "inkvizice", name: "Inkvizice", icon: "🔥" },
+    { id: "rytirstvo-dhoxarovo", name: "Rytířstvo D'hoxarovo", icon: "🛡️" },
+    { id: "nekromant-x", name: "Nekromant X", icon: "💀" },
+    { id: "magie-ve-svete", name: "Magie ve světě", icon: "✨" },
+    { id: "prorocke-vize", name: "Proroctví a věštby", icon: "🔮" }
   ]
 }
 ];
