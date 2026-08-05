@@ -983,7 +983,7 @@ var ITEM_CATEGORIES = {
 </script>
 <script src="predmety-data.js"></script>
 <script>
-const WIKI_VERSION_DEFAULT = 'v2.1';
+const WIKI_VERSION_DEFAULT = 'v2.2';
 (function() {
   const v = localStorage.getItem('aekildae_version') || WIKI_VERSION_DEFAULT;
   const el = document.getElementById('wikiVersion');
@@ -1177,7 +1177,7 @@ const DATA = [
     sections: [
       { title: "Duchovní dráha", text: "Od mládí byl veden k víře a v jinošském věku byl odeslán do kléru. Studoval teologii ve svatomorriském klášteře v Saint Morris Honor, kde byl vysvěcen na Kastlana. Po ukončení studia byl jmenován Episkopem a přidělena mu Diecéze ve Faregu." },
       { title: "Liliová výprava", text: "V roce 1717 se spolu s inkvizicí a Rytířstvem D'hoxarovým účastnil tažení proti bezvěrcům známém jako Liliová výprava. V Hrabství Kibii na západě kontinentu došlo ke vzestupu Kultu Salamandra, který usiloval o uchvácení vlády." },
-      { title: "Arcipontifikát", text: "V roce 1724 byl na konkláve v Saint Morris Honor zvolen Arcipontifikem — Nejvyšším duchovním služebníkem boží Pentateistické církve dobrotivého D'hoxara a svatých sourozenců Jeho. Pod jeho řízením bylo vystaveno mnoho církevních svatostánků, vydal Církevní výnos a významně posílil vliv Inkvizice, ze které se stal policejní orgán vyšetřující církevní provinění a herezi." }
+      { title: "Arcipontifikát a Církevní výnos", text: "V roce 1724 byl na konkláve v Saint Morris Honor zvolen Arcipontifikem — Nejvyšším duchovním služebníkem boží Pentateistické církve dobrotivého D'hoxara a svatých sourozenců Jeho. Pod jeho řízením bylo vystaveno mnoho církevních svatostánků a učinil klíčový krok k upevnění moci církve: vydal Církevní výnos — Kánonický soubor pravidel, který definuje hierarchii církve, zřizuje Inkvizici jako policejní orgán s vlastní pevností Excelsio Deus, ustanovuje Rytířstvo D'hoxarovo jako ozbrojenou pěst církve a zavádí tajný Paladinský řád pro svou osobní ochranu se sídlem ve Fairmontském Paláci v Saint Morris Honor. Výnosem zavedl povinný desátek a pozemkovou daň, čímž zajistil církvi stálý přísun prostředků." }
     ],
     infoBox: {
       title: "Profil",
@@ -1191,7 +1191,8 @@ const DATA = [
     },
     related: [
       { id: "renauld-navaro", name: "Císař Renauld-Navaro", icon: "🏛️" },
-      { id: "roderick-hampton", name: "Komtur Hampton", icon: "🛡️" }
+      { id: "roderick-hampton", name: "Komtur Hampton", icon: "🛡️" },
+      { id: "cirkevni-vynos", name: "Církevní výnos", icon: "📜" }
     ]
   }
 },
@@ -1719,7 +1720,7 @@ const DATA = [
   excerpt: "Tajemný muž šlechtického původu, prý bývalý arcipontifikán. V Marisiru nalezl klid a stal se velitelem stráží.",
   detail: {
     sections: [
-      { title: "Záhadná minulost", text: "Bred do Marisiru přišel asi před deseti lety. O minulosti toho příliš neřekl, ale je zřejmé, že pochází ze šlechtického rodu, zřejmě z Karnnelu. Má bohaté duchovní vzdělání. Zlí jazykové tvrdí, že byl arcipontifikánem — příslušníkem rytířského řádu chránícího nejvyššího duchovního představitele — ale po nesouhlasu se směřováním církve řád opustil." },
+      { title: "Záhadná minulost", text: "Bred do Marisiru přišel asi před deseti lety. O minulosti toho příliš neřekl, ale je zřejmé, že pochází ze šlechtického rodu, zřejmě z Karnnelu. Má bohaté duchovní vzdělání. Zlí jazykové tvrdí, že byl arcipontifikánem — příslušníkem tajného Paladinského řádu svatých obránců Arcipontifikátu (Ordo Equitum Sancti Defensoris Archiepontificum), zřízeného §5 Církevního výnosu k osobní ochraně Arcipontifika. Dle výnosu musí být Arcipontifex nepřetržitě ochraňován nejméně třemi Komtury tohoto řádu. Pokud Bred skutečně byl jedním z nich, musel mít přímý přístup k nejmocnějšímu muži církve. Opustil řád údajně po nesouhlasu se směřováním církve — možná právě s rostoucí mocí Inkvizice a pronásledováním kouzelníků." },
       { title: "Služba", text: "Hledal klid a duchovní naplnění, které nalezl v Marisiru. Spřátelil se s vladykou Torbertem a vstoupil do městské stráže. Díky vzdělání v taktice, boji a velení se vypracoval na velitele městských stráží. Blízkost pohoří Cruinnece slibuje nikdy nekončící boj s divokými tvory." }
     ],
     infoBox: {
@@ -2371,7 +2372,7 @@ const DATA = [
   detail: {
     sections: [
       { title: "Geografie a politika", text: "Karnnelské impérium je nejmocnější stát na kontinentální pevnině. Sousedí na západě s Movarií, na severu s Pětiměstím a Meziříčím. Pod jeho kontrolou je Císařská Marka (Rabenwald), okupované území na severu. Vládne mu císař Renauld-Navaro du Farego de Karnnelville." },
-      { title: "Církev a magie", text: "V celé říši má obrovský vliv Pentateistická církev dobrotivého D'hoxara a svatých sourozenců jeho. Církev považuje magii za kacířství — věří, že kouzelníci zapříčinili velkou religionistickou válku. Mocná Inkvizice funguje jako policejní orgán, který pátrá po kouzelnících a upaluje je. Rytířstvo D'hoxarovo (Militia D'hoxar) je ozbrojenou pěstí církve." },
+      { title: "Církev a magie", text: "V celé říši má obrovský vliv Pentateistická církev dobrotivého D'hoxara, jejíž moc je kodifikována v Církevním výnosu — Kánonickém souboru pravidel. Dle §2 výnosu je magie herezí (s výjimkou léčitelství a přírodní magie). Mocná Inkvizice (§3) sídlící v pevnosti Excelsio Deus v Saint Morris Honor pátrá po kouzelnících. Rytířstvo D'hoxarovo (§4) se sídlem v hradu Naris je ozbrojenou pěstí církve. Tajný Paladinský řád (§5) chrání osobu Arcipontifika. Každý věřící je dle §8 povinen platit desátek." },
       { title: "Hlavní město", text: "Karnnelville je obrovské rozlehlé město — Staré město s přístavem, hradem Naris (sídlo Rytířstva D'hoxarova), katedrálou a stokami, a Nové město s boulevardy. Ve městě působí zlodějská Společnost vedená tajemným Ryokem." },
       { title: "Vojenské operace", text: "Impérium tajně provádí vojenské operace na svrchovaném elfském území Ergwenynu. Západní říšská flotila s námořní pěchotou zasahuje i do vnitřních záležitostí Ækildae. V novinách se psalo o převratu v Ækildae a vyslání imperiálních sil." }
     ],
@@ -2601,7 +2602,7 @@ const DATA = [
     sections: [
       { title: "Víra", text: "Pentateistická církev dobrotivého D'hoxara a svatých sourozenců jeho je hlavní náboženskou institucí Karnnelského impéria. Ačkoliv její víra vychází ze stejného základu jako náboženství téměř celého světa, Karnnelská odnož se vyvinula v náboženský fanatismus. Věří, že kouzelníci zapříčinili velkou religionistickou válku, od jejíhož ukončení se počítá letopočet. Pro tento prvotní hřích považují veškerou magii za kacířství." },
       { title: "Duchovní hierarchie", text: "V čele církve stojí Arcipontifik — Nejvyšší duchovní služebník. Současným arcipontifikem je Armando-Navaro du Farego de Karnnelville, bratr císaře. Pod ním slouží Episkopové řídící diecéze, Kastlani a další duchovní hodnosti. Svatomorriský klášter v Saint Morris Honor je hlavním duchovním centrem." },
-      { title: "Církevní moc", text: "Pod vedením arcipontifika Armanda-Navaro došlo k významnému posílení církevního vlivu. Vydal Církevní výnos, který zpřesnil pravidla a umožnil růst církevních majetků. Církev disponuje dvěma ozbrojenými rameny: Inkvizicí (policejní orgán) a Rytířstvem D'hoxarovým (vojenský řád). Církev také provozuje kláštery jako Balmard v Karnnelvillu." },
+      { title: "Církevní moc a Církevní výnos", text: "Pod vedením arcipontifika Armanda-Navaro došlo k vydání klíčového Církevního výnosu — Kánonického souboru pravidel, který definuje celou strukturu církevní moci. Dle §6 výnosu je hierarchie: Arcipontifex (doživotní úřad, volen kolegiem pontifiků), 5 Pontifiků (jeden za každého boha), Arciepiskopové, Episkopové (správci diecézí), Kastláni (správci parocií, šíří slovo boží mezi lidem) a Juheni (nejnižší služebníci). Výnos zřizuje tři ozbrojené složky: Inkvizici (§3), Rytířstvo D'hoxarovo (§4) a tajný Paladinský řád osobní ochrany Arcipontifika (§5). Dle §8 je každý věřící povinen odevzdat desátek (každý desátý krejcar), vlastníci půdy musí poskytnout každý stý akr a řemeslníci musí přednostně vyhotovovat církevní zakázky." },
       { title: "Liliová výprava (1717)", text: "Církev organizovala svaté tažení proti Kultu Salamandra v Hrabství Kibii — hnutí vedenému čaroději, které usilovalo o uchvácení vlády. Výpravy se účastnil budoucí arcipontifik Armando-Navaro spolu s inkvizicí a Rytířstvem D'hoxarovým." }
     ],
     infoBox: {
@@ -2627,7 +2628,7 @@ const DATA = [
   excerpt: "Mocný policejní orgán Pentateistické církve, který vyšetřuje a stíhá všechna církevní provinění, herezi a především kouzelníky.",
   detail: {
     sections: [
-      { title: "Poslání", text: "Inkvizice je policejní orgán zřízený Pentateistickou církví D'hoxara. Jejím hlavním úkolem je pátrat po kouzelnících, čarodějích a všech uživatelích magie, kteří jsou v Karnnelském impériu postaveni mimo zákon. Vyšetřuje a stíhá také církevní provinění a herezi obecně. Pod vedením arcipontifika Armanda-Navaro došlo k významnému posílení její moci." },
+      { title: "Poslání a právní základ", text: "Inkvizice je policejní orgán zřízený Pentateistickou církví D'hoxara na základě §3 Církevního výnosu Arcipontifika Armanda-Navaro. Jejím hlavním úkolem je pátrat po kouzelnících, čarodějích a všech uživatelích magie (§2 výnosu definuje herezi), kteří jsou v Karnnelském impériu postaveni mimo zákon. Výnos zároveň ukládá Inkvizici povinnost vyhledávat a ničit prokleté magické předměty. Pod vedením arcipontifika Armanda-Navaro došlo k významnému posílení její moci." }, { title: "Hierarchie", text: "Dle §3 Církevního výnosu má Inkvizice přesně stanovenou strukturu. V čele stojí Superior, volený Pontifikátem z řad Arciepiskopů. Pod ním zasedá Senát — čtyři Soudci tvořící nejvyšší tribunál, volení z řad Prokurátorů s minimálně 15 lety zkušeností. Prokurátoři řídí oddíly a předsedají vyšetřovacímu Sněmu. Komisaři velí rotám a při méně závažných proviněních mohou vynášet rozsudky. Inspektoři řídí čety a Detektivové jsou výkonným ramenem zboru. Hlavním sídlem je pevnost Excelsio Deus ve městě Saint Morris Honor." },
       { title: "Činnost", text: "Inkvizice má pravomoc uzavírat budovy a vyhlašovat karanténu — jako tomu bylo u Sanatoria pro duševně choré v Karnnelvillu po nekromantském výronu. Dohlíží na dodržování církevních zákonů a má vlastní vyšetřovatele a ozbrojené složky. Pro hrdiny představuje trvalou hrozbu, protože ve své družině mají kouzelníka." },
       { title: "Nebezpečí pro hrdiny", text: "Ernest Thornhill varoval hrdiny před Inkvizicí ještě před jejich odjezdem do Karnnelvillu. V družině dobrodruhů je kouzelník Darius Sorin, bocman Hamish je hledaný zbojník a půlork Orgoth vypadá jako démon — každý z nich by mohl přitáhnout pozornost inkvizitorů. Proto se hrdinové museli v Karnnelvillu pohybovat obezřetně." }
     ],
@@ -2644,7 +2645,8 @@ const DATA = [
     related: [
       { id: "pentateisticka-cirkev", name: "Církev D'hoxara", icon: "⛪" },
       { id: "rytirstvo-dhoxarovo", name: "Rytířstvo D'hoxarovo", icon: "🛡️" },
-      { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" }
+      { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" },
+      { id: "cirkevni-vynos", name: "Církevní výnos", icon: "📜" }
     ]
   }
 },
@@ -2654,7 +2656,7 @@ const DATA = [
   excerpt: "Vojensko-náboženský rytířský řád — ozbrojená pěst Pentateistické církve. Sídlí v hradu Naris v Karnnelvillu.",
   detail: {
     sections: [
-      { title: "Poslání", text: "Militia D'hoxar pro ecclesiae sanctae suae — Rytířstvo D'hoxarovi obrany jeho církve svaté — je prastarý vojensko-náboženský řád sloužící jako ozbrojená složka Pentateistické církve. Rytíři jsou připraveni postavit se do čela vojsk k obraně církve a bojovat proti nepřátelům víry." },
+      { title: "Poslání a právní základ", text: "Militia D'hoxar pro ecclesiae sanctae suae — Rytířstvo D'hoxarovi obrany jeho církve svaté — je vojensko-náboženský řád zřízený §4 Církevního výnosu jako zbrojná pěst církve. Dle výnosu je řád organizován vojensky s balivátem kavalerie a komendou infanterie. V činné službě je pouze štáb a po jedné rotě kavalerie a infanterie — ostatní se věnují běžným povinnostem, ale musí být připraveni na povolání. Každý člen je povinen odsloužit minimálně dva měsíce ročně ve stráži a výcviku. Výnos také ukládá, že každý člen musí být vysvěceným Kastlanem, aby mohl spolubojovníkům udělovat zpověď a požehnání." },
       { title: "Hierarchie", text: "Noví členové vstupují jako novici (3 roky teologické výuky, šermu a péče o zvířata). Po složení slibu se stávají Frater militis. Postupují přes hodnost Sergeantum D'hoxari až na pozice komturů — Comtur Secundus (zástupce velitele roty) a Priorum Commandariae (velitel komendy). Řád přijímá i panoše, které rytíři osobně vychovávají." },
       { title: "Sídlo a působení", text: "Hlavním sídlem je hrad Naris v Karnnelvillu. Řád se účastnil Liliové výpravy proti Kultu Salamandra v roce 1717 a posiloval obranu u pohoří Cruinnece u Madalu. Komtur Roderick Hampton přijal za svěřence mladého Remonta du Antolon, syna svého přítele." },
       { title: "Remont du Antolon", text: "Rytíř Remont Arnald du Antolon byl členem řádu, který se dostal do křížku s Inkvizicí kvůli ochraně své sestry Josephin. Na její radu opustil řád a připojil se k hrdinům — jeho sestra ve vizích viděla, že bude bojovat s nemrtvými v dalekých zemích oděn v rodových barvách." }
@@ -2673,7 +2675,8 @@ const DATA = [
       { id: "roderick-hampton", name: "Komtur Hampton", icon: "🛡️" },
       { id: "josephin-du-antolon", name: "Josephin du Antolon", icon: "⛪" },
       { id: "bred", name: "Bred", icon: "🛡️" },
-      { id: "pentateisticka-cirkev", name: "Církev D'hoxara", icon: "⛪" }
+      { id: "pentateisticka-cirkev", name: "Církev D'hoxara", icon: "⛪" },
+      { id: "cirkevni-vynos", name: "Církevní výnos (§4)", icon: "📜" }
     ]
   }
 },
@@ -2798,7 +2801,7 @@ const DATA = [
   detail: {
     sections: [
       { title: "Magie ve světě", text: "Magie je přirozenou součástí světa Aekildae. Existují kouzelníci, čarodějové, druidové i klerici ovládající božskou moc. Magické svitky s kouzlem Poselství umožňují komunikaci na dálku. Nekromancie dokáže oživovat mrtvé a vytvářet nemrtvé bytosti. Druidská magie umožňuje přeměnu v zvířata a ovládání přírodních sil. Existují i magické předměty — dwimeritová pouta blokující magii, kouzelné prsteny a zbraně." },
-      { title: "Perzekuce v Karnnelském impériu", text: "Pentateistická církev D'hoxara v Karnnelském impériu považuje veškerou magii za kacířství. Věří, že kouzelníci zapříčinili velkou religionistickou válku, od jejíhož ukončení se počítá letopočet. Všichni kouzelníci a čarodějové jsou v impériu postaveni mimo zákon. Církevní Inkvizice po nich aktivně pátrá a usvědčení uživatelé magie jsou upalováni." },
+      { title: "Perzekuce v Karnnelském impériu", text: "Pentateistická církev D'hoxara v Karnnelském impériu považuje magii za kacířství na základě §2 Církevního výnosu. Dle tohoto paragrafu se bohům protiví každá bytost ovládající Moc vycházející z podstaty magie. Zajímavou výjimkou je však léčitelská a přírodní magie — výnos výslovně vyjímá Moc zdraví a život ochraňující a přírodní růst a prosperitu podporující. Teoreticky by tedy druidská magie Melisy nebo léčitelství nemusely být herezí — praxe Inkvizice je však často méně nuancovaná než litera zákona. Všichni kouzelníci arkánní magie jsou v impériu postaveni mimo zákon a Inkvizice po nich aktivně pátrá." },
       { title: "Dopady na hrdiny", text: "Pronásledování magie komplikuje operace hrdinů v Karnnelském impériu, protože v jejich družině je kouzelník Darius Sorin. Ernest Thornhill je varoval před používáním magických komunikačních prostředků, protože impérium zřejmě magickou komunikaci sleduje. Společnost dokonce distribuuje lektvar blokující magické účinky pro případ střetu s kouzelníky." },
       { title: "Dwimerit", text: "Dwimerit je zvláštní kov používaný k výrobě pout, která blokují magii. V dwimeritových poutech byl spoután nekromant X ve svém sarkofágu. Když mu dobrodruzi pouta sejmuli, došlo ke komprimaci jeho kostry — první krok k jeho pozdějšímu vzkříšení." },
       { title: "Magie mimo impérium", text: "V Ækildae a Movarii je magie tolerována a využívána. Královská rozvědka Ækildae používá magické svitky ke komunikaci. V Movarii žijí druidové v lesích a čarodějnice jako Brilanta. Elfské cirkusy prodávají magické předměty. Na ostrově Pansomin kněžka Aratornita chrání svět proti průniku temných sil svou prastarou magií." }
@@ -2916,7 +2919,7 @@ const DATA = [
       { title: "Přírodní a mořská božstva", text: "Elfská kněžka Marinahael na ostrově Sentrink Lungsat vyznává přírodní mořská božstva. Její víra jí umožňuje uklidňovat bouře a léčit. Na ostrovech Hilaperllas mají tato starší božstva stále své vyznavače. Druidská tradice v lesích Angelwoodu ctí přírodu a její cykly — druidka Melisa ovládá Kruh bylin." },
       { title: "Prastaré síly", text: "Kněžka Aratornita na ostrově Pansomin střeží svět proti průniku temných sil, jak k tomu došlo po Velké Konjunkci před Astrální válkou. Její víra a moc sahají do dob před současným letopočtem. Brilanta v mokřadech u Marisiru vyznává vlastní tradici — její obřadní lebka slouží jako médium pro přenos poselství a proroctví." },
       { title: "Řád Milostivé B'raxisoylex", text: "Ženský klášterní řád pečující v klášteře Balmard v Karnnelvillu. Sestra Josephin du Antolon z tohoto řádu měla věštecké vize a její modlitby spolu se sestrami dokázaly zadržet přízračné běsy a zabránit zkáze celého města." },
-      { title: "Kult Salamandra", text: "Zakázaný kult vedený čaroději, postavený mimo zákon v Karnnelském impériu již před pěti sty lety. V roce 1717 se pokusil uchvátit vládu v Hrabství Kibii. Proti němu byla vyslána Liliová výprava — svaté tažení organizované církví." }
+      { title: "Kult Salamandra", text: "Zakázaný kult vedený čaroději, postavený mimo zákon v Karnnelském impériu již před pěti sty lety dle §2 Církevního výnosu o herezi. V roce 1717 se pokusil uchvátit vládu v Hrabství Kibii. Proti němu byla vyslána Liliová výprava — svaté tažení organizované církví za účasti Inkvizice i Rytířstva D'hoxarova." }
     ],
     infoBox: {
       title: "Náboženství v Aekildae",
@@ -3682,21 +3685,6 @@ document.addEventListener('click', (e) => {
 const ZAKONY_STORAGE_KEY = 'aekildae_zakony_v1';
 let zakonEdEditingId = null;
 
-// Načti zákony z localStorage
-(function() {
-  try {
-    const saved = localStorage.getItem(ZAKONY_STORAGE_KEY);
-    if (!saved) return;
-    const ls = JSON.parse(saved);
-    if (!Array.isArray(ls)) return;
-    const lsMap = {}; ls.forEach(z => { lsMap[z.id] = z; });
-    for (let i = 0; i < ZAKONY_DATA.length; i++) {
-      if (lsMap[ZAKONY_DATA[i].id]) ZAKONY_DATA[i] = lsMap[ZAKONY_DATA[i].id];
-    }
-    ls.forEach(z => { if (!ZAKONY_DATA.find(x => x.id === z.id)) ZAKONY_DATA.push(z); });
-  } catch(e) {}
-})();
-
 function zakonEdSaveLS() {
   try { localStorage.setItem(ZAKONY_STORAGE_KEY, JSON.stringify(ZAKONY_DATA)); } catch(e) {}
 }
@@ -3872,6 +3860,21 @@ const ZAKONY_DATA = [
   ]
 }
 ];
+
+// Načti zákony z localStorage — musí být AŽ PO definici ZAKONY_DATA
+(function() {
+  try {
+    const saved = localStorage.getItem(ZAKONY_STORAGE_KEY);
+    if (!saved) return;
+    const ls = JSON.parse(saved);
+    if (!Array.isArray(ls)) return;
+    const fileZakony = ZAKONY_DATA.slice();
+    const lsMap = {}; ls.forEach(z => { lsMap[z.id] = z; });
+    ZAKONY_DATA.length = 0;
+    fileZakony.forEach(fz => ZAKONY_DATA.push(lsMap[fz.id] || fz));
+    ls.forEach(lz => { if (!fileZakony.find(fz => fz.id === lz.id)) ZAKONY_DATA.push(lz); });
+  } catch(e) { console.warn('localStorage chyba (zakony):', e); }
+})();
 
 function zakonInit() {
   document.getElementById('zakonSearch').value = '';
